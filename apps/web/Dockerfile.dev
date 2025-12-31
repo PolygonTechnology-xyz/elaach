@@ -1,13 +1,46 @@
 FROM node:22-alpine
 
 RUN apk add --no-cache libc6-compat
+
+# ---- pnpm setup (IMPORTANT FIX) ----
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+
+RUN corepack enable
+
 # Set working directory
 WORKDIR /app
 
 COPY . .
-RUN corepack enable pnpm && pnpm add -g turbo
+RUN pnpm add -g turbo
 RUN pnpm install
 
 EXPOSE 3000
 VOLUME [ "/app/node_modules", "/app/web/node_modules" ]
 CMD ["pnpm", "dev", "--filter=web"]
+
+
+# FROM node:22-alpine
+
+# RUN apk add --no-cache libc6-compat
+
+# # ---- pnpm setup (IMPORTANT FIX) ----
+# ENV PNPM_HOME="/pnpm"
+# ENV PATH="$PNPM_HOME:$PATH"
+
+# RUN corepack enable
+
+# # Set working directory
+# WORKDIR /app
+
+# COPY . .
+
+# # Install turbo globally (now PNPM_HOME exists)
+# RUN pnpm add -g turbo
+
+# RUN pnpm install
+
+# EXPOSE 3000
+
+# CMD ["pnpm", "dev", "--filter=web"]
+

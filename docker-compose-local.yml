@@ -66,17 +66,41 @@ services:
   # web:
   #   build:
   #     context: .
-  #     dockerfile: ./web/Dockerfile.dev
+  #     dockerfile: ./apps/web/Dockerfile.dev
   #   restart: unless-stopped
   #   networks:
   #     - dev_env
   #   volumes:
-  #     - ./web:/app/web
+  #     - .:/app
+  #     - /app/apps/web/.next
+  #   environment:
+  #     - WATCHPACK_POLLING=true
+  #     - CHOKIDAR_USEPOLLING=true
   #   env_file:
-  #     - ./web/.env
+  #     - ./apps/web/.env
   #   depends_on:
   #     - api
   #     - worker
+  #   ports:
+  #     - "3000:3000"
+  
+  web:
+    build:
+      context: .
+      dockerfile: ./apps/web/Dockerfile.dev
+    restart: unless-stopped
+    networks:
+      - dev_env
+    volumes:
+      # - ./web:/app/web
+      - ./apps/web:/app/web
+    env_file:
+      - ./apps/web/.env
+    depends_on:
+      - api
+      - worker
+    ports:
+      - "3000:3000"
 
   # space:
   #   build:
@@ -91,6 +115,21 @@ services:
   #     - api
   #     - worker
   #     - web
+  space:
+    build:
+      context: .
+      dockerfile: ./apps/space/Dockerfile.dev
+    restart: unless-stopped
+    networks:
+      - dev_env
+    volumes:
+      - ./apps/space:/app/space
+    depends_on:
+      - api
+      - worker
+      - web
+    ports:
+      - "4000:4000"
 
   # admin:
   #   build:
@@ -105,6 +144,21 @@ services:
   #     - api
   #     - worker
   #     - web
+  admin:
+    build:
+      context: .
+      dockerfile: ./apps/admin/Dockerfile.dev
+    restart: unless-stopped
+    networks:
+      - dev_env
+    volumes:
+      - ./apps/admin:/app/admin
+    depends_on:
+      - api
+      - worker
+      - web
+    ports:  
+      - "3001:3001"
 
   # live:
   #   build:
@@ -119,6 +173,21 @@ services:
   #     - api
   #     - worker
   #     - web
+  live:
+    build:
+      context: .
+      dockerfile: ./apps/live/Dockerfile.dev
+    restart: unless-stopped
+    networks:
+      - dev_env
+    volumes:
+      - ./apps/live:/app/live
+    depends_on:
+      - api
+      - worker
+      - web
+    ports:
+    - "3003:3003"
 
   api:
     build:

@@ -4,13 +4,10 @@ import { EEstimateSystem, ESTIMATE_SYSTEMS } from "@plane/constants";
 import { useTranslation } from "@plane/i18n";
 import { Tooltip } from "@plane/propel/tooltip";
 import type { TEstimateSystemKeys } from "@plane/types";
-// components
-import { convertMinutesToHoursMinutesString } from "@plane/utils";
 // plane web imports
 import { isEstimateSystemEnabled } from "@/plane-web/components/estimates/helper";
 import { UpgradeBadge } from "@/plane-web/components/workspace/upgrade-badge";
 import { RadioInput } from "../radio-select";
-// local imports
 
 type TEstimateCreateStageOne = {
   estimateSystem: TEstimateSystemKeys;
@@ -27,6 +24,7 @@ export function EstimateCreateStageOne(props: TEstimateCreateStageOne) {
   const currentEstimateSystem = ESTIMATE_SYSTEMS[estimateSystem] || undefined;
 
   if (!currentEstimateSystem) return <></>;
+
   return (
     <div className="space-y-6">
       <div className="sm:flex sm:items-center sm:space-x-10 sm:space-y-0 gap-2 mb-2">
@@ -79,7 +77,6 @@ export function EstimateCreateStageOne(props: TEstimateCreateStageOne) {
             >
               <p className="text-14 font-medium">{t("project_settings.estimates.create.custom")}</p>
               <p className="text-11 text-tertiary">
-                {/* TODO: Translate here */}
                 Add your own <span className="lowercase">{currentEstimateSystem.name}</span> from scratch.
               </p>
             </button>
@@ -100,11 +97,7 @@ export function EstimateCreateStageOne(props: TEstimateCreateStageOne) {
                     <p className="text-14 font-medium">{currentEstimateSystem.templates[name]?.title}</p>
                     <p className="text-11 text-tertiary">
                       {currentEstimateSystem.templates[name]?.values
-                        ?.map((template) =>
-                          estimateSystem === (EEstimateSystem.TIME as TEstimateSystemKeys)
-                            ? convertMinutesToHoursMinutesString(Number(template.value)).trim()
-                            : template.value
-                        )
+                        ?.map((template) => template.value)
                         ?.join(", ")}
                     </p>
                   </button>
@@ -117,5 +110,3 @@ export function EstimateCreateStageOne(props: TEstimateCreateStageOne) {
     </div>
   );
 }
-
-//

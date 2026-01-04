@@ -185,3 +185,14 @@ def get_analytics_filters(
         "analytics_date_range": analytics_date_range,
         "chart_period_range": chart_period_range,
     }
+
+def seconds_to_readable_format(seconds):
+    """
+    Given a total number of seconds, returns a readable format string (e.g., "15h 20m").
+    """
+    if seconds is None or seconds == 0:
+        return "0h 0m"
+    td = timedelta(seconds=int(seconds))
+    total_hours = int(td.total_seconds() // 3600)
+    minutes = int((td.total_seconds() % 3600) // 60)
+    return f"{total_hours}h {minutes}m"

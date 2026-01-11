@@ -6,7 +6,7 @@ import { useTranslation } from "@plane/i18n";
 import { EEstimateSystem } from "@plane/types";
 import type { TIssue } from "@plane/types";
 import { Spinner } from "@plane/ui";
-import { convertMinutesToHoursMinutesString } from "@plane/utils";
+// import { convertMinutesToHoursMinutesString } from "@plane/utils";
 // hooks
 import { useEstimate, useProjectEstimates } from "@/hooks/store/estimates";
 // local imports
@@ -51,7 +51,7 @@ export const PowerKWorkItemEstimatesMenu = observer(function PowerKWorkItemEstim
               icon={Triangle}
               label={
                 currentActiveEstimate?.type === EEstimateSystem.TIME
-                  ? convertMinutesToHoursMinutesString(Number(estimatePoint.value))
+                  ?estimatePoint.value
                   : estimatePoint.value
               }
               isSelected={workItemDetails.estimate_point === estimatePoint.id}

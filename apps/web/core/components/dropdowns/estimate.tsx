@@ -10,7 +10,7 @@ import { useTranslation } from "@plane/i18n";
 import { EstimatePropertyIcon, ChevronDownIcon } from "@plane/propel/icons";
 import { EEstimateSystem } from "@plane/types";
 import { ComboDropDown } from "@plane/ui";
-import { convertMinutesToHoursMinutesString, cn } from "@plane/utils";
+import { cn } from "@plane/utils";
 // hooks
 import { useProjectEstimates } from "@/hooks/store/estimates";
 import { useEstimate } from "@/hooks/store/estimates/use-estimate";
@@ -108,7 +108,7 @@ export const EstimateDropdown = observer(function EstimateDropdown(props: Props)
               <EstimatePropertyIcon className="h-3 w-3 flex-shrink-0" />
               <span className="flex-grow truncate">
                 {currentActiveEstimate?.type === EEstimateSystem.TIME
-                  ? convertMinutesToHoursMinutesString(Number(currentEstimatePoint.value))
+                  ? currentEstimatePoint.value
                   : currentEstimatePoint.value}
               </span>
             </div>
@@ -195,7 +195,7 @@ export const EstimateDropdown = observer(function EstimateDropdown(props: Props)
               <span className="truncate">
                 {selectedEstimate ? (
                   currentActiveEstimate?.type === EEstimateSystem.TIME ? (
-                    convertMinutesToHoursMinutesString(Number(selectedEstimate.value))
+                  selectedEstimate.value
                   ) : (
                     selectedEstimate.value
                   )

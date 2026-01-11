@@ -17,7 +17,7 @@ export enum EEstimateUpdateStages {
 
 export const estimateCount = {
   min: 2,
-  max: 6,
+  max: 12,
 };
 
 export const ESTIMATE_SYSTEMS: TEstimateSystems = {
@@ -121,12 +121,12 @@ export const ESTIMATE_SYSTEMS: TEstimateSystems = {
         title: "Hours",
         i18n_title: "project_settings.estimates.systems.time.hours",
         values: [
-          { id: undefined, key: 1, value: "1h" },
-          { id: undefined, key: 2, value: "2h" },
-          { id: undefined, key: 3, value: "3h" },
-          { id: undefined, key: 4, value: "4h" },
-          { id: undefined, key: 5, value: "5h" },
-          { id: undefined, key: 6, value: "6h" },
+          { id: undefined, key: 1, value: "1" },
+          { id: undefined, key: 2, value: "2" },
+          { id: undefined, key: 3, value: "3" },
+          { id: undefined, key: 4, value: "4" },
+          { id: undefined, key: 5, value: "5" },
+          { id: undefined, key: 6, value: "6" },
         ],
       },
     },

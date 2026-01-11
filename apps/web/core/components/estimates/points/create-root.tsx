@@ -96,7 +96,8 @@ export const EstimatePointCreateRoot = observer(function EstimatePointCreateRoot
   };
 
   const handleCreate = () => {
-    if (estimatePoints && estimatePoints.length + (estimatePointCreate?.length || 0) <= estimateCount.max - 1) {
+    // (<= estimateCount.max - 1) removed this condition , so that we can create unlimited time , points and categories
+    if (estimatePoints && estimatePoints.length + (estimatePointCreate?.length || 0)) {
       const currentKey = estimatePoints.length + (estimatePointCreate?.length || 0) + 1;
       handleEstimatePointCreate("add", {
         id: undefined,
@@ -164,7 +165,7 @@ export const EstimatePointCreateRoot = observer(function EstimatePointCreateRoot
             }
           />
         ))}
-      {estimatePoints && estimatePoints.length + (estimatePointCreate?.length || 0) <= estimateCount.max - 1 && (
+      {estimatePoints && estimatePoints.length + (estimatePointCreate?.length || 0) && (
         <Button variant="link" prependIcon={<Plus />} onClick={handleCreate}>
           Add {estimateType}
         </Button>

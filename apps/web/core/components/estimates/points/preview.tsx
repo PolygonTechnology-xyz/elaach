@@ -6,7 +6,7 @@ import { GripVertical, Pencil, Trash2 } from "lucide-react";
 import { EEstimateSystem, estimateCount } from "@plane/constants";
 import { useTranslation } from "@plane/i18n";
 import type { TEstimatePointsObject, TEstimateSystemKeys, TEstimateTypeErrorObject } from "@plane/types";
-import { convertMinutesToHoursMinutesString } from "@plane/utils";
+// import { convertMinutesToHoursMinutesString } from "@plane/utils";
 // plane web imports
 import { EstimatePointDelete } from "@/plane-web/components/estimates";
 // local imports
@@ -55,14 +55,14 @@ export const EstimatePointItemPreview = observer(function EstimatePointItemPrevi
 
   return (
     <div>
-      {!estimatePointEditToggle && !estimatePointDeleteToggle && (
+      {!estimatePointEditToggle && (
         <div className="border border-subtle rounded-sm relative flex items-center px-1 gap-2 text-14 my-1">
           <div className="rounded-xs w-6 h-6 flex-shrink-0 relative flex justify-center items-center hover:bg-layer-1 transition-colors cursor-pointer">
             <GripVertical size={14} className="text-secondary" />
           </div>
           <div ref={EstimatePointValueRef} className="py-2 w-full text-13">
             {estimatePoint?.value ? (
-              `${estimateType === EEstimateSystem.TIME ? convertMinutesToHoursMinutesString(Number(estimatePoint?.value)) : estimatePoint?.value}`
+              `${estimateType === EEstimateSystem.TIME ? estimatePoint?.value : estimatePoint?.value}`
             ) : (
               <span className="text-placeholder">{t("project_settings.estimates.create.enter_estimate_point")}</span>
             )}

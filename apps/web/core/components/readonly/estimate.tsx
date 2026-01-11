@@ -31,7 +31,7 @@ export const ReadonlyEstimate = observer(function ReadonlyEstimate(props: TReado
 
   const displayValue = estimatePoint
     ? currentActiveEstimate?.type === EEstimateSystem.TIME
-      ? convertMinutesToHoursMinutesString(Number(estimatePoint.value))
+      ?estimatePoint.value
       : estimatePoint.value
     : null;
 

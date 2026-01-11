@@ -93,7 +93,7 @@ services:
       - dev_env
     volumes:
       # - ./web:/app/web
-      - ./apps/web:/app/web
+      - ./apps/web:/app/apps/web
     env_file:
       - ./apps/web/.env
     depends_on:

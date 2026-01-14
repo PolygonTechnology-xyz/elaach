@@ -1,8 +1,8 @@
 name: Feature request
 description: Suggest a feature to improve Plane
 title: "[feature]: "
-labels: [✨feature, plane]
-assignees: [vihar, pushya22]
+labels: [✨feature, Elaach]
+assignees: [Dhaka, Salam]
 body:
 - type: markdown
   attributes:

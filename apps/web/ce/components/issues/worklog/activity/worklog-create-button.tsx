@@ -136,10 +136,10 @@ export function IssueActivityWorklogCreateButton({
         type="button"
         disabled={disabled}
         onClick={toggleOpen}
-        className={`text-blue-500 bg-transparent border border-blue-500
-          hover:bg-blue-500/20 focus:text-blue-500 focus:bg-blue-500/30
-          px-3 py-1.5 font-medium text-xs rounded flex items-center gap-1.5 whitespace-nowrap
-          transition-all justify-center outline-none disabled:opacity-50 disabled:cursor-not-allowed`}
+        className="text-blue-500 border border-blue-500 
+      bg-blue-500 focus:bg-blue-500/20
+      bg-transparent px-3 py-1.5 font-medium text-xs rounded flex items-center gap-1.5 whitespace-nowrap
+      transition-all justify-center outline-none disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <div className="h-3 w-3 flex justify-center items-center overflow-hidden my-0.5 flex-shrink-0">
           <Plus size={14} strokeWidth={2} />
@@ -148,10 +148,15 @@ export function IssueActivityWorklogCreateButton({
       </button>
 
       {isOpen && (
-        <div className="absolute bottom-full right-0 mt-2 z-50 w-[300px] sm:w-[340px] bg-[#18181b] border border-gray-800 rounded-lg shadow-xl p-4 text-gray-300 text-left">
+        <div className="absolute bottom-full right-0 mt-2 z-50 w-[300px] sm:w-[340px] p-4 rounded-lg shadow-xl text-left
+          bg-white border border-gray-200 text-gray-700
+          dark:bg-[#18181b] dark:border-gray-800 dark:text-gray-300"
+        >
 
           <div className="flex items-center mb-4">
-            <div className="bg-[#27272a] flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold text-gray-400">
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold
+                bg-gray-100 text-gray-600
+                dark:bg-[#27272a] dark:text-gray-400">
               <Clock size={14} />
               <span>{hours || '0'}h {minutes || '0'}m</span>
             </div>
@@ -165,7 +170,9 @@ export function IssueActivityWorklogCreateButton({
                 placeholder="Hours"
                 value={hours}
                 onChange={(e) => setHours(e.target.value)}
-                className="w-full bg-transparent border border-gray-700 rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500 placeholder-gray-600 transition-colors"
+                className="w-full bg-transparent border rounded px-3 py-2 text-sm transition-colors outline-none
+                border-gray-300 text-gray-900 focus:border-blue-500 placeholder-gray-400
+                dark:border-gray-700 dark:text-white dark:focus:border-blue-500 dark:placeholder-gray-600"
               />
             </div>
             <div className="flex-1">
@@ -176,7 +183,9 @@ export function IssueActivityWorklogCreateButton({
                 placeholder="Minutes"
                 value={minutes}
                 onChange={(e) => setMinutes(e.target.value)}
-                className="w-full bg-transparent border border-gray-700 rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500 placeholder-gray-600 transition-colors"
+                className="w-full bg-transparent border rounded p-3 text-sm resize-none transition-colors outline-none
+                  border-gray-300 text-gray-900 focus:border-blue-500 placeholder-gray-400
+                  dark:border-gray-700 dark:text-white dark:focus:border-blue-500 dark:placeholder-gray-600"
               />
             </div>
           </div>
@@ -187,7 +196,9 @@ export function IssueActivityWorklogCreateButton({
               placeholder="Description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full bg-transparent border border-gray-700 rounded p-3 text-sm text-white focus:outline-none focus:border-blue-500 placeholder-gray-600 resize-none transition-colors"
+              className="w-full bg-transparent border rounded p-3 text-sm resize-none transition-colors outline-none
+            border-gray-300 text-gray-900 focus:border-blue-500 placeholder-gray-400
+            dark:border-gray-700 dark:text-white dark:focus:border-blue-500 dark:placeholder-gray-600"
             />
           </div>
 
@@ -195,14 +206,14 @@ export function IssueActivityWorklogCreateButton({
             <button
               onClick={() => setIsOpen(false)}
               disabled={isSubmitting}
-              className="px-4 py-1.5 text-sm font-medium text-gray-400 hover:text-white bg-transparent hover:bg-gray-800 rounded border border-transparent hover:border-gray-700 transition-all disabled:opacity-50"
+              className="px-4 py-1.5 text-sm font-medium rounded border transition-all disabled:opacity-50 text-black dark:text-white"
             >
               Cancel
             </button>
             <button
               onClick={handleSave}
               disabled={isSubmitting}
-              className="px-4 py-1.5 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded transition-colors shadow-sm flex items-center gap-2 disabled:bg-blue-600/50"
+              className="px-4 py-1.5 text-sm font-medium rounded border transition-all disabled:opacity-50 text-black dark:text-white"
             >
               {isSubmitting && <Loader2 size={14} className="animate-spin" />}
               Save

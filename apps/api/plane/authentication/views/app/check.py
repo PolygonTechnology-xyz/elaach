@@ -47,6 +47,7 @@ class EmailCheckEndpoint(APIView):
             ]
         )
 
+        #-----------------------SMTP configured check and magic login enabled check ------------------------------------
         smtp_configured = bool(EMAIL_HOST)
         is_magic_login_enabled = ENABLE_MAGIC_LINK_LOGIN == "1"
 

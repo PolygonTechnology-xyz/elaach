@@ -82,7 +82,7 @@ export default {
       already_have_an_account: "Haben Sie bereits ein Konto?",
       login: "Anmelden",
       create_account: "Konto erstellen",
-      new_to_plane: "Neu bei Plane?",
+      new_to_plane: "Neu bei Elaach?",
       back_to_sign_in: "Zurück zur Anmeldung",
       resend_in: "Erneut senden in {seconds} Sekunden",
       sign_in_with_unique_code: "Mit einmaligem Code anmelden",
@@ -1968,13 +1968,13 @@ export default {
       label: "Automatisierungen",
       "auto-archive": {
         title: "Geschlossene Arbeitselemente automatisch archivieren",
-        description: "Plane wird Arbeitselemente automatisch archivieren, die abgeschlossen oder abgebrochen wurden.",
+        description: "Elaach wird Arbeitselemente automatisch archivieren, die abgeschlossen oder abgebrochen wurden.",
         duration: "Arbeitselemente automatisch archivieren, die seit",
       },
       "auto-close": {
         title: "Arbeitselemente automatisch schließen",
         description:
-          "Plane wird Arbeitselemente automatisch schließen, die nicht abgeschlossen oder abgebrochen wurden.",
+          "Elaach wird Arbeitselemente automatisch schließen, die nicht abgeschlossen oder abgebrochen wurden.",
         duration: "Inaktive Arbeitselemente automatisch schließen seit",
         auto_close_status: "Status der automatischen Schließung",
       },
@@ -2598,7 +2598,7 @@ export default {
   },
   self_hosted_maintenance_message: {
     plane_didnt_start_up_this_could_be_because_one_or_more_plane_services_failed_to_start:
-      "Plane ist nicht gestartet. Dies könnte daran liegen, dass einer oder mehrere Plane-Services nicht starten konnten.",
+      "Elaach ist nicht gestartet. Dies könnte daran liegen, dass einer oder mehrere Elaach-Services nicht starten konnten.",
     choose_view_logs_from_setup_sh_and_docker_logs_to_be_sure:
       "Wählen Sie View Logs aus setup.sh und Docker-Logs, um sicherzugehen.",
   },

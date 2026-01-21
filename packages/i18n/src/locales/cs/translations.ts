@@ -82,7 +82,7 @@ export default {
       already_have_an_account: "Už máte účet?",
       login: "Přihlásit se",
       create_account: "Vytvořit účet",
-      new_to_plane: "Nový v Plane?",
+      new_to_plane: "Nový v Elaach?",
       back_to_sign_in: "Zpět k přihlášení",
       resend_in: "Znovu odeslat za {seconds} sekund",
       sign_in_with_unique_code: "Přihlásit se pomocí jedinečného kódu",
@@ -1945,12 +1945,12 @@ export default {
       label: "Automatizace",
       "auto-archive": {
         title: "Automaticky archivovat uzavřené pracovní položky",
-        description: "Plane bude automaticky archivovat pracovní položky, které byly dokončeny nebo zrušeny.",
+        description: "Elaach bude automaticky archivovat pracovní položky, které byly dokončeny nebo zrušeny.",
         duration: "Automaticky archivovat pracovní položky, které jsou uzavřené po dobu",
       },
       "auto-close": {
         title: "Automaticky uzavírat pracovní položky",
-        description: "Plane automaticky uzavře pracovní položky, které nebyly dokončeny nebo zrušeny.",
+        description: "Elaach automaticky uzavře pracovní položky, které nebyly dokončeny nebo zrušeny.",
         duration: "Automaticky uzavřít pracovní položky, které jsou neaktivní po dobu",
         auto_close_status: "Stav automatického uzavření",
       },
@@ -2570,7 +2570,7 @@ export default {
   },
   self_hosted_maintenance_message: {
     plane_didnt_start_up_this_could_be_because_one_or_more_plane_services_failed_to_start:
-      "Plane se nespustil. To může být způsobeno tím, že se jeden nebo více služeb Plane nepodařilo spustit.",
+      "Elaach se nespustil. To může být způsobeno tím, že se jeden nebo více služeb Elaach nepodařilo spustit.",
     choose_view_logs_from_setup_sh_and_docker_logs_to_be_sure:
       "Vyberte View Logs z setup.sh a Docker logů, abyste si byli jisti.",
   },

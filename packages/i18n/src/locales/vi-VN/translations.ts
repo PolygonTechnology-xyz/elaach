@@ -82,7 +82,7 @@ export default {
       already_have_an_account: "Đã có tài khoản?",
       login: "Đăng nhập",
       create_account: "Tạo tài khoản",
-      new_to_plane: "Lần đầu sử dụng Plane?",
+      new_to_plane: "Lần đầu sử dụng Elaach?",
       back_to_sign_in: "Quay lại đăng nhập",
       resend_in: "Gửi lại sau {seconds} giây",
       sign_in_with_unique_code: "Đăng nhập bằng mã duy nhất",

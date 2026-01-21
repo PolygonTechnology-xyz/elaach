@@ -83,7 +83,7 @@ export default {
       already_have_an_account: "Zaten bir hesabınız var mı?",
       login: "Giriş yap",
       create_account: "Hesap oluştur",
-      new_to_plane: "Plane'e yeni mi geldiniz?",
+      new_to_plane: "Elaach'e yeni mi geldiniz?",
       back_to_sign_in: "Giriş yapmaya geri dön",
       resend_in: "{seconds} saniye içinde tekrar gönder",
       sign_in_with_unique_code: "Benzersiz kod ile giriş yap",

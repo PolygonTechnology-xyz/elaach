@@ -44,13 +44,13 @@ export const HelpMenuRoot = observer(function HelpMenuRoot() {
         maxHeight="lg"
         closeOnSelect
       >
-        <CustomMenu.MenuItem onClick={() => window.open("https://go.plane.so/p-docs", "_blank")}>
+        {/* <CustomMenu.MenuItem onClick={() => window.open("https://go.plane.so/p-docs", "_blank")}>
           <div className="flex items-center gap-x-2 rounded-sm text-11">
             <PageIcon className="h-3.5 w-3.5 text-secondary" height={14} width={14} />
             <span className="text-11">{t("documentation")}</span>
           </div>
-        </CustomMenu.MenuItem>
-        {isChatSupportEnabled && (
+        </CustomMenu.MenuItem> */}
+        {/* {isChatSupportEnabled && (
           <CustomMenu.MenuItem>
             <button
               type="button"
@@ -61,14 +61,14 @@ export const HelpMenuRoot = observer(function HelpMenuRoot() {
               <span className="text-11">{t("message_support")}</span>
             </button>
           </CustomMenu.MenuItem>
-        )}
-        <CustomMenu.MenuItem onClick={() => window.open("mailto:sales@plane.so", "_blank")}>
+        )} */}
+        {/* <CustomMenu.MenuItem onClick={() => window.open("mailto:sales@plane.so", "_blank")}>
           <div className="flex items-center gap-x-2 rounded-sm text-11">
             <User className="h-3.5 w-3.5 text-secondary" size={14} />
             <span className="text-11">{t("contact_sales")}</span>
           </div>
-        </CustomMenu.MenuItem>
-        <div className="my-1 border-t border-subtle" />
+        </CustomMenu.MenuItem> */}
+        {/* <div className="my-1 border-t border-subtle" /> */}
         <CustomMenu.MenuItem>
           <button
             type="button"
@@ -78,7 +78,7 @@ export const HelpMenuRoot = observer(function HelpMenuRoot() {
             <span className="text-11">{t("keyboard_shortcuts")}</span>
           </button>
         </CustomMenu.MenuItem>
-        <CustomMenu.MenuItem>
+        {/* <CustomMenu.MenuItem>
           <button
             type="button"
             onClick={() => setProductUpdatesModalOpen(true)}
@@ -86,14 +86,14 @@ export const HelpMenuRoot = observer(function HelpMenuRoot() {
           >
             <span className="text-11">{t("whats_new")}</span>
           </button>
-        </CustomMenu.MenuItem>
-        <CustomMenu.MenuItem
+        </CustomMenu.MenuItem> */}
+        {/* <CustomMenu.MenuItem
           onClick={() => window.open("https://go.plane.so/p-discord", "_blank", "noopener,noreferrer")}
         >
           <div className="flex items-center gap-x-2 rounded-sm text-11">
             <span className="text-11">Discord</span>
           </div>
-        </CustomMenu.MenuItem>
+        </CustomMenu.MenuItem> */}
         <div className="px-1 pt-2 mt-1 text-11 text-secondary border-t border-subtle">
           <PlaneVersionNumber />
         </div>

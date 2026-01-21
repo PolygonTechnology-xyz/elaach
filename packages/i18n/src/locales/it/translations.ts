@@ -82,7 +82,7 @@ export default {
       already_have_an_account: "Hai già un account?",
       login: "Accedi",
       create_account: "Crea un account",
-      new_to_plane: "Nuovo su Plane?",
+      new_to_plane: "Nuovo su Elaach?",
       back_to_sign_in: "Torna al login",
       resend_in: "Reinvia in {seconds} secondi",
       sign_in_with_unique_code: "Accedi con codice unico",

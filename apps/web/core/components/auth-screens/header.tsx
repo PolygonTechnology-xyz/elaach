@@ -35,7 +35,7 @@ export const AuthHeader = observer(function AuthHeader({ type }: AuthHeaderProps
   const enableSignUpConfig = config?.enable_signup ?? false;
   return (
     <>
-      <PageHead title={t(authContentMap[type].pageTitle) + " - Plane"} />
+      <PageHead title={t(authContentMap[type].pageTitle) + " - Elaach"} />
       <div className="flex items-center justify-between gap-6 w-full flex-shrink-0 sticky top-0">
         <Link href="/">
           <PlaneLockup height={20} width={95} className="text-primary" />

@@ -70,7 +70,7 @@ const InstanceGithubAuthenticationPage = observer(function InstanceGithubAuthent
         <div className="border-b border-subtle mx-4 py-4 space-y-1 flex-shrink-0">
           <AuthenticationMethodCard
             name="GitHub"
-            description="Allow members to login or sign up to plane with their GitHub accounts."
+            description="Allow members to login or sign up to Elaach with their GitHub accounts."
             icon={
               <img
                 src={resolveGeneralTheme(resolvedTheme) === "dark" ? githubDarkModeImage : githubLightModeImage}

@@ -61,7 +61,7 @@ const InstanceGiteaAuthenticationPage = observer(function InstanceGiteaAuthentic
         <div className="border-b border-subtle mx-4 py-4 space-y-1 flex-shrink-0">
           <AuthenticationMethodCard
             name="Gitea"
-            description="Allow members to login or sign up to plane with their Gitea accounts."
+            description="Allow members to login or sign up to Elaach with their Gitea accounts."
             icon={<img src={giteaLogo} height={24} width={24} alt="Gitea Logo" />}
             config={
               <ToggleSwitch

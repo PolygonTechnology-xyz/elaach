@@ -61,7 +61,7 @@ const InstanceGitlabAuthenticationPage = observer(function InstanceGitlabAuthent
         <div className="border-b border-subtle mx-4 py-4 space-y-1 flex-shrink-0">
           <AuthenticationMethodCard
             name="GitLab"
-            description="Allow members to login or sign up to plane with their GitLab accounts."
+            description="Allow members to login or sign up to Elaach with their GitLab accounts."
             icon={<img src={GitlabLogo} height={24} width={24} alt="GitLab Logo" />}
             config={
               <ToggleSwitch

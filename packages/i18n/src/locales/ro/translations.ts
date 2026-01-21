@@ -82,7 +82,7 @@ export default {
       already_have_an_account: "Ai deja un cont?",
       login: "Autentificare",
       create_account: "Creează un cont",
-      new_to_plane: "Ești nou în Plane?",
+      new_to_plane: "Ești nou în Elaach?",
       back_to_sign_in: "Înapoi la autentificare",
       resend_in: "Retrimite în {seconds} secunde",
       sign_in_with_unique_code: "Autentificare cu cod unic",

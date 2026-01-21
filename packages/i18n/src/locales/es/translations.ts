@@ -82,7 +82,7 @@ export default {
       already_have_an_account: "¿Ya tienes una cuenta?",
       login: "Iniciar sesión",
       create_account: "Crear una cuenta",
-      new_to_plane: "¿Nuevo en Plane?",
+      new_to_plane: "¿Nuevo en Elaach?",
       back_to_sign_in: "Volver a iniciar sesión",
       resend_in: "Reenviar en {seconds} segundos",
       sign_in_with_unique_code: "Iniciar sesión con código único",
@@ -1977,13 +1977,13 @@ export default {
       "auto-archive": {
         title: "Archivar automáticamente elementos de trabajo cerrados",
         description:
-          "Plane archivará automáticamente los elementos de trabajo que hayan sido completados o cancelados.",
+          "Elaach archivará automáticamente los elementos de trabajo que hayan sido completados o cancelados.",
         duration: "Archivar automáticamente elementos de trabajo cerrados durante",
       },
       "auto-close": {
         title: "Cerrar automáticamente elementos de trabajo",
         description:
-          "Plane cerrará automáticamente los elementos de trabajo que no hayan sido completados o cancelados.",
+          "Elaach cerrará automáticamente los elementos de trabajo que no hayan sido completados o cancelados.",
         duration: "Cerrar automáticamente elementos de trabajo inactivos durante",
         auto_close_status: "Estado de cierre automático",
       },

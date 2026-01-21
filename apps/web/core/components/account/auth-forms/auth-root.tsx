@@ -16,7 +16,7 @@ import {
 // hooks
 import { useInstance } from "@/hooks/store/use-instance";
 // local imports
-import { TermsAndConditions } from "../terms-and-conditions";
+// import { TermsAndConditions } from "../terms-and-conditions";
 import { AuthBanner } from "./auth-banner";
 import { AuthHeader } from "./auth-header";
 import { AuthFormRoot } from "./form-root";
@@ -129,7 +129,7 @@ export const AuthRoot = observer(function AuthRoot(props: TAuthRoot) {
           setErrorInfo={(errorInfo) => setErrorInfo(errorInfo)}
           currentAuthMode={currentAuthMode}
         />
-        <TermsAndConditions authType={authMode} />
+        {/* <TermsAndConditions authType={authMode} /> */}
       </div>
     </div>
   );

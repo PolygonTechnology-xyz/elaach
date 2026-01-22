@@ -46,6 +46,7 @@ class AnthropicProvider(LLMProvider):
     models = [
         "claude-3-5-sonnet-20240620",
         "claude-3-haiku-20240307",
+        "claude-4.5-haiku",
         "claude-3-opus-20240229",
         "claude-3-sonnet-20240229",
         "claude-2.1",

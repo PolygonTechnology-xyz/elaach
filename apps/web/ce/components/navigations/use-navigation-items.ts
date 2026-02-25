@@ -1,7 +1,7 @@
 import { useMemo, useCallback } from "react";
 // plane imports
 import { EUserPermissions, EUserPermissionsLevel } from "@plane/constants";
-import { CycleIcon, IntakeIcon, ModuleIcon, PageIcon, ViewsIcon, WorkItemsIcon } from "@plane/propel/icons";
+import { CycleIcon, IntakeIcon, ModuleIcon, PageIcon, ViewsIcon, WorkItemsIcon, RetroIcon } from "@plane/propel/icons";
 import type { EUserProjectRoles, IPartialProject } from "@plane/types";
 import type { TNavigationItem } from "@/components/navigation/tab-navigation-root";
 
@@ -17,6 +17,7 @@ type UseNavigationItemsProps = {
   ) => boolean;
 };
 
+console.log("---------------------------------------------------> use-navigation-items loaded");
 export const useNavigationItems = ({
   workspaceSlug,
   projectId,
@@ -85,6 +86,16 @@ export const useNavigationItems = ({
         access: [EUserPermissions.ADMIN, EUserPermissions.MEMBER, EUserPermissions.GUEST],
         shouldRender: !!project?.inbox_view,
         sortOrder: 6,
+      },
+      {
+        i18n_key: "sidebar.retros",
+        key: "retros",
+        name: "Retros",
+        href: `/${workspaceSlug}/projects/${projectId}/retros`,
+        icon: RetroIcon,
+        access: [EUserPermissions.ADMIN, EUserPermissions.MEMBER, EUserPermissions.GUEST],
+        shouldRender: !!project?.retro_view,
+        sortOrder: 7,
       },
     ],
     [project]

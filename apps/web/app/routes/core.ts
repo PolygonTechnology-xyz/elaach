@@ -210,6 +210,22 @@ export const coreRoutes: RouteConfigEntry[] = [
               "./(all)/[workspaceSlug]/(projects)/projects/(detail)/[projectId]/intake/page.tsx"
             ),
           ]),
+           // retros list
+          layout("./(all)/[workspaceSlug]/(projects)/projects/(detail)/[projectId]/retros/(list)/layout.tsx", [
+            route(
+              ":workspaceSlug/projects/:projectId/retros",
+              "./(all)/[workspaceSlug]/(projects)/projects/(detail)/[projectId]/retros/(list)/page.tsx"
+            ),
+          ]),
+          // Retro Detail (Black Page)
+
+          layout("./(all)/[workspaceSlug]/(projects)/projects/(detail)/[projectId]/retros/(detail)/layout.tsx", [
+            route(
+              ":workspaceSlug/projects/:projectId/retros/:retroId",
+              "./(all)/[workspaceSlug]/(projects)/projects/(detail)/[projectId]/retros/(detail)/[retroId]/page.tsx"
+            ),
+          ]),
+
         ]),
 
         // Project Archives - Issues, Cycles, Modules
@@ -244,6 +260,7 @@ export const coreRoutes: RouteConfigEntry[] = [
             "./(all)/[workspaceSlug]/(projects)/projects/(detail)/[projectId]/archives/modules/page.tsx"
           ),
         ]),
+        
       ]),
 
       // ====================================================================

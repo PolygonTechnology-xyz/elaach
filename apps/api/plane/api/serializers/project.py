@@ -76,6 +76,7 @@ class ProjectCreateSerializer(BaseSerializer):
             "issue_views_view",
             "page_view",
             "intake_view",
+            "retro_view",
             "guest_view_all_features",
             "archive_in",
             "close_in",
@@ -189,6 +190,7 @@ class ProjectSerializer(BaseSerializer):
     member_role = serializers.IntegerField(read_only=True)
     is_deployed = serializers.BooleanField(read_only=True)
     cover_image_url = serializers.CharField(read_only=True)
+    retro_view = serializers.BooleanField()
 
     class Meta:
         model = Project

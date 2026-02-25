@@ -1,4 +1,8 @@
-import sanitizeHtml from "sanitize-html";
+// Use browser-safe sanitization to avoid server-only modules in client bundles.
+// We avoid importing `sanitize-html` at top-level because it depends on Node APIs
+// (`fs`, `path`, etc.) which are externalized by Vite and cause runtime errors
+// when this package is used in the browser. Use DOMParser when available and
+// fall back to a simple regex stripper on the server or in limited runtimes.
 import type { Content, JSONContent } from "@plane/types";
 
 /**
@@ -120,8 +124,23 @@ const text = stripHTML(html);
 console.log(text); // Some text
  */
 export const sanitizeHTML = (htmlString: string) => {
-  const sanitizedText = sanitizeHtml(htmlString, { allowedTags: [] }); // sanitize the string to remove all HTML tags
-  return sanitizedText.trim(); // trim the string to remove leading and trailing whitespaces
+  if (!htmlString) return "";
+
+  // In browser environments, use DOMParser to extract text content safely.
+  if (typeof window !== "undefined" && typeof DOMParser !== "undefined") {
+    try {
+      const doc = new DOMParser().parseFromString(htmlString, "text/html");
+      return (doc.body.textContent || "").trim();
+    } catch (_e) {
+      // fall through to regex fallback
+    }
+  }
+
+  // Fallback (also works on server): remove tags via a simple regex.
+  // This is intentionally conservative and only strips tags; if you need
+  // richer sanitization on the server, call `sanitize-html` from server-only
+  // code paths.
+  return htmlString.replace(/<[^>]*>/g, "").trim();
 };
 
 /**
@@ -154,10 +173,9 @@ export const checkEmailValidity = (email: string): boolean => {
   return isEmailValid;
 };
 
-export const isEmptyHtmlString = (htmlString: string, allowedHTMLTags: string[] = []) => {
-  // Remove HTML tags using sanitize-html
-  const cleanText = sanitizeHtml(htmlString, { allowedTags: allowedHTMLTags });
-  // Trim the string and check if it's empty
+export const isEmptyHtmlString = (htmlString: string, _allowedHTMLTags: string[] = []) => {
+  // Reuse sanitizeHTML which strips tags in a browser-safe way
+  const cleanText = sanitizeHTML(htmlString);
   return cleanText.trim() === "";
 };
 

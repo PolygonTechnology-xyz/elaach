@@ -18,12 +18,13 @@ function FeaturesSettingsPage({ params }: Route.ComponentProps) {
   const { currentProjectDetails } = useProject();
   // derived values
   const pageTitle = currentProjectDetails?.name ? `${currentProjectDetails?.name} - Features` : undefined;
+  // console.log("Rendering FeaturesSettingsPage", workspaceSlug, projectId, currentProjectDetails, workspaceUserInfo, allowPermissions);
   const canPerformProjectAdminActions = allowPermissions([EUserPermissions.ADMIN], EUserPermissionsLevel.PROJECT);
 
   if (workspaceUserInfo && !canPerformProjectAdminActions) {
     return <NotAuthorizedView section="settings" isProjectView className="h-auto" />;
   }
-
+  // console.log("------------------Rendering FeaturesSettingsPage", ProjectFeaturesList);
   return (
     <SettingsContentWrapper>
       <PageHead title={pageTitle} />

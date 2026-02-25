@@ -63,6 +63,6 @@ export class AIService extends APIService {
       .then((res) => res?.data)
       .catch((error) => {
         throw error?.response?.data;
-      });
+      }); 
   }
 }

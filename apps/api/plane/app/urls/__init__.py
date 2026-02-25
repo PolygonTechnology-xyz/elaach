@@ -19,6 +19,7 @@ from .workspace import urlpatterns as workspace_urls
 from .timezone import urlpatterns as timezone_urls
 from .exporter import urlpatterns as exporter_urls
 from .tracked_time import urlpatterns as tracked_time_urls
+from .retro import urlpatterns as retro_urls
 
 urlpatterns = [
     *analytic_urls,
@@ -42,4 +43,5 @@ urlpatterns = [
     *timezone_urls,
     *exporter_urls,
     *tracked_time_urls,
+    *retro_urls,
 ]

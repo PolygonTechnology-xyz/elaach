@@ -10,7 +10,7 @@ from .user import urlpatterns as user_patterns
 from .work_item import urlpatterns as work_item_patterns
 from .invite import urlpatterns as invite_patterns
 from .sticky import urlpatterns as sticky_patterns
-
+from .retro import urlpatterns as retro_patterns
 urlpatterns = [
     *asset_patterns,
     *cycle_patterns,
@@ -24,4 +24,5 @@ urlpatterns = [
     *work_item_patterns,
     *invite_patterns,
     *sticky_patterns,
+    *retro_patterns,
 ]

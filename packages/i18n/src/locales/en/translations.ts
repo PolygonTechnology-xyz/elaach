@@ -210,6 +210,7 @@ export default {
   modules: "Modules",
   pages: "Pages",
   intake: "Intake",
+  retro: "Retro", // added retro here
   time_tracking: "Time Tracking",
   work_management: "Work management",
   projects_and_issues: "Projects and work items",
@@ -220,6 +221,8 @@ export default {
   views_description: "Save custom sorts, filters, and display options or share them with your team.",
   pages_description: "Create and edit free-form content; notes, docs, anything.",
   intake_description: "Let non-members share bugs, feedback, and suggestions; without disrupting your workflow.",
+  retro_description: "create a retro board to reflect on your team's work and processes to continuously improve.",
+  
   time_tracking_description: "Log time spent on work items and projects.",
   work_management_description: "Manage your work and projects with ease.",
   documentation: "Documentation",
@@ -2254,6 +2257,14 @@ export default {
         title: "Views are not enabled for the project.",
         description:
           "Views are the building blocks of your project. Enable views from project settings to start using them.",
+        primary_button: {
+          text: "Manage features",
+        },
+      },
+      retro : {
+        title: "Retrospectives are not enabled for the project.",
+        description:
+          "Retrospectives are the building blocks of your project. Enable retrospectives from project settings to start using them.",
         primary_button: {
           text: "Manage features",
         },

@@ -63,7 +63,7 @@ export const RetroListHeader = observer(function RetroListHeader({ onCreateClick
             onClick={onCreateClick}
           >
             <div className="sm:hidden block">{t("add")}</div>
-            <div className="hidden sm:block">Create Retros</div>
+            <div className="hidden sm:block">Add retro board</div>
           </Button>
         </Header.RightItem>
       ) : null}

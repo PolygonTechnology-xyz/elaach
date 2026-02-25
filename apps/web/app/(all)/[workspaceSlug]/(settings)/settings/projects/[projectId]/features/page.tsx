@@ -23,7 +23,7 @@ function FeaturesSettingsPage({ params }: Route.ComponentProps) {
 
   if (workspaceUserInfo && !canPerformProjectAdminActions) {
     return <NotAuthorizedView section="settings" isProjectView className="h-auto" />;
-  }
+  } 
   // console.log("------------------Rendering FeaturesSettingsPage", ProjectFeaturesList);
   return (
     <SettingsContentWrapper>

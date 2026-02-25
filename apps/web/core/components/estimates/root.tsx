@@ -100,14 +100,14 @@ export const EstimateRoot = observer(function EstimateRoot(props: TEstimateRoot)
                 <p className="text-13 text-secondary">
                   Estimates have gone through a change, these are the estimates you had in your older versions which
                   were not in use. Read more about them&nbsp;
-                  <a
-                    href={"https://docs.plane.so/core-concepts/projects/run-project#estimate"}
+                  {/* <a
+                    // href={"https://docs.plane.so/core-concepts/projects/run-project#estimate"}
                     target="_blank"
                     className="text-accent-primary/80 hover:text-accent-primary"
                     rel="noreferrer"
                   >
                     here.
-                  </a>
+                  </a> */}
                 </p>
               </div>
               <EstimateList estimateIds={archivedEstimateIds} isAdmin={isAdmin} />

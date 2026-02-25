@@ -127,7 +127,7 @@ export const ProjectNavigation = observer(function ProjectNavigation(props: TPro
         href: `/${workspaceSlug}/projects/${projectId}/retros`,
         icon: RetroIcon,
         access: [EUserPermissions.ADMIN, EUserPermissions.MEMBER, EUserPermissions.GUEST],
-        shouldRender: project?.retro_view ?? false,
+        shouldRender:  project?.retro_view?? false,
         sortOrder: 7,
       },
     ],

@@ -17,10 +17,9 @@ export default function ProjectRetrosListLayout() {
   const searchParams = useSearchParams();
   const cycleId = searchParams.get("cycleId") || "";
 
-  // Fetch retro boards when modal opens (if cycleId is available)
   useEffect(() => {
     if (createModal && workspaceSlug && projectId && cycleId) {
-      // Fetch boards for the selected cycle
+
       fetchBoards(workspaceSlug as string, projectId as string, cycleId);
     }
   }, [createModal, workspaceSlug, projectId, cycleId, fetchBoards]);

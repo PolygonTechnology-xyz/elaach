@@ -71,10 +71,9 @@ export const CycleOptions = observer(function CycleOptions(props: CycleOptionsPr
   });
 
   const cycleIds = (getProjectCycleIds(projectId) ?? [])?.filter((cycleId) => {
-    const cycleDetails = getCycleById(cycleId);
-    if (currentCycleId && currentCycleId === cycleId) return false;
-    return cycleDetails?.status ? (cycleDetails?.status.toLowerCase() != "completed" ? true : false) : true;
-  });
+  if (currentCycleId && currentCycleId === cycleId) return false;
+    return true;
+});
 
   const onOpen = () => {
     if (workspaceSlug && !cycleIds) fetchAllCycles(workspaceSlug.toString(), projectId);

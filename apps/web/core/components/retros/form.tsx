@@ -48,7 +48,7 @@ export function RetroForm(props: Props) {
     <form onSubmit={handleSubmit((formData) => handleFormSubmit(formData))}>
       <div className="space-y-5 p-5 max-h-[70vh] overflow-y-auto">
         <h3 className="text-18 font-medium text-secondary">
-          {status ? "* Update Retro" : "Create Retro"}
+          {status ? "* Update Retro" : "Create Retro Board"}
         </h3>
 
         <div className="space-y-3">
@@ -118,7 +118,7 @@ export function RetroForm(props: Props) {
           {t("common.cancel")}
         </Button>
         <Button variant="primary" type="submit" loading={isSubmitting}>
-          {status ? "Update Retro" : "Create Retro"}
+          {status ? "Update Retro" : "Save"}
         </Button>
       </div>
     </form>

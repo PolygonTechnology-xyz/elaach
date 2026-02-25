@@ -69,7 +69,7 @@ export function RetroCreateUpdateModal({ isOpen, handleClose, data, workspaceSlu
           await fetchBoards(workspaceSlug, projectId, selectedCycleId);
         }
 
-        setToast({ type: TOAST_TYPE.SUCCESS, title: "Success!", message: "Retrospective created." });
+        setToast({ type: TOAST_TYPE.SUCCESS, title: "Success!", message: "Retro board created." });
       }
 
       handleClose();

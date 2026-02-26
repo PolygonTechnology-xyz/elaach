@@ -251,8 +251,7 @@ export const PeekOverviewProperties: FC<IPeekOverviewProperties> = observer((pro
         </div>
 
         {/* estimate */}
-        {/*--------------------------------------- leaving here for further work for Estimation time------------------------ */}
-        {isEstimateEnabled && (
+        {/* deleted contition to check if estimate is enabled for the project as estimate is now a default activated property for all projects */}
           <div className="flex w-full items-center gap-3 h-8">
             <div className="flex items-center gap-1 w-1/4 flex-shrink-0 text-sm text-custom-text-300">
               <Triangle className="h-4 w-4 flex-shrink-0" />
@@ -273,7 +272,7 @@ export const PeekOverviewProperties: FC<IPeekOverviewProperties> = observer((pro
               dropdownArrowClassName="h-3.5 w-3.5 hidden group-hover:inline"
             />
           </div>
-        )}
+        
 
         {projectDetails?.module_view && (
           <div className="flex w-full items-center gap-3 min-h-8 h-full">

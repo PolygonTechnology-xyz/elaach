@@ -13,7 +13,7 @@ type TEstimateList = {
 };
 
 export const EstimateList = observer(function EstimateList(props: TEstimateList) {
-  const { estimateIds, isAdmin, isEstimateEnabled = false, isEditable = false, onEditClick, onDeleteClick } = props;
+  const { estimateIds, isAdmin, isEstimateEnabled = true, isEditable = false, onEditClick, onDeleteClick } = props;
 
   if (!estimateIds || estimateIds?.length <= 0) return <></>;
   return (

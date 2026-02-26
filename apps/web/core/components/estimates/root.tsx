@@ -50,10 +50,10 @@ export const EstimateRoot = observer(function EstimateRoot(props: TEstimateRoot)
       ) : (
         <div className="space-y-6">
           {/* header */}
-          <SettingsHeading
+          {/* <SettingsHeading
             title={t("project_settings.estimates.heading")}
             description={t("project_settings.estimates.description")}
-          />
+          /> */}
 
           {currentActiveEstimateId ? (
             <div className="space-y-4">

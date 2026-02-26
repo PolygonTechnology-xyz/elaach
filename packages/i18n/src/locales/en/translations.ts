@@ -1737,7 +1737,7 @@ export default {
       heading: "Estimates",
       description: "Set up estimation systems to track and communicate the effort required for each work item.",
       label: "Estimates",
-      title: "Enable estimates for my project",
+      title: "Estimate Enabled ✅",
       enable_description: "They help you in communicating complexity and workload of the team.",
       no_estimate: "No estimate",
       new: "New estimate system",

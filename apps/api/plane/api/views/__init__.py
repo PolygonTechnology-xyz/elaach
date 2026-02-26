@@ -58,3 +58,4 @@ from .invite import WorkspaceInvitationsViewset
 
 from .sticky import StickyViewSet
 from .tracked_time import TrackedTimeViewSet
+from .retro import RetroBoardViewSet, RetroItemViewSet

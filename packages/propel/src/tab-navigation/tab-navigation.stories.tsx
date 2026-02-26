@@ -8,6 +8,7 @@ import { ModuleIcon } from "../icons/project/module-icon";
 import { PageIcon } from "../icons/project/page-icon";
 import { ViewsIcon } from "../icons/project/view-icon";
 import { WorkItemsIcon } from "../icons/project/work-items-icon";
+import { RetroIcon } from "../icons/project/retro-icon";
 // tab navigation import
 import { TabNavigationItem } from "./tab-navigation-item";
 import { TabNavigationList } from "./tab-navigation-list";
@@ -43,6 +44,7 @@ export const Default: Story = {
       { key: "views", name: "Views", href: "#views", icon: ViewsIcon },
       { key: "pages", name: "Pages", href: "#pages", icon: PageIcon },
       { key: "intake", name: "Intake", href: "#intake", icon: IntakeIcon },
+      { key: "retro", name: "Retros", href: "#retro", icon: RetroIcon },
     ];
 
     return (
@@ -81,17 +83,17 @@ export const Default: Story = {
           <div className="text-11 font-medium text-secondary mb-2">Example Code:</div>
           <pre className="text-11 text-tertiary overflow-x-auto">
             {`// With React Router Link
-<TabNavigationList>
-  {items.map(item => (
-    <Link key={item.key} to={item.href}>
-      <TabNavigationItem isActive={pathname === item.href}>
-        <item.icon className="h-4 w-4" />
-        <span>{item.name}</span>
-      </TabNavigationItem>
-    </Link>
-  ))}
-</TabNavigationList>
-`}
+            <TabNavigationList>
+              {items.map(item => (
+                <Link key={item.key} to={item.href}>
+                  <TabNavigationItem isActive={pathname === item.href}>
+                    <item.icon className="h-4 w-4" />
+                    <span>{item.name}</span>
+                  </TabNavigationItem>
+                </Link>
+              ))}
+            </TabNavigationList>
+          `}
           </pre>
         </div>
       </div>

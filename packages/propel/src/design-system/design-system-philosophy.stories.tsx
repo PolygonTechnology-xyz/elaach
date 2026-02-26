@@ -377,7 +377,7 @@ export const CommonMistakes: Story = {
 
       <div className="space-y-6">
         <div className="border-2 border-red-500 rounded-md p-4">
-          <h4 className="text-primary mb-2 font-semibold">❌ Mistake 1: Nested Surfaces (Same Plane)</h4>
+          <h4 className="text-primary mb-2 font-semibold">❌ Mistake 1: Nested Surfaces (Same Elaach)</h4>
           <Surface>
             <p className="text-secondary mb-2 text-13">Surface 1</p>
             <div className="bg-surface-2 rounded-md p-4">

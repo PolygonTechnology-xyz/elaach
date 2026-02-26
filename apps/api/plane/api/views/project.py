@@ -3,7 +3,7 @@ import json
 
 # Django imports
 from django.db import IntegrityError
-from django.db.models import Exists, F, Func, OuterRef, Prefetch, Q, Subquery
+from django.db.models import Exists, F, Func, OuterRef, Prefetch, Q, Subquery 
 from django.utils import timezone
 from django.core.serializers.json import DjangoJSONEncoder
 
@@ -27,6 +27,7 @@ from plane.db.models import (
     DEFAULT_STATES,
     Workspace,
     UserFavorite,
+    RetroBoard,
 )
 from plane.bgtasks.webhook_task import model_activity, webhook_activity
 from .base import BaseAPIView
@@ -410,6 +411,8 @@ class ProjectDetailAPIEndpoint(BaseAPIView):
             current_instance = json.dumps(ProjectSerializer(project).data, cls=DjangoJSONEncoder)
 
             intake_view = request.data.get("intake_view", project.intake_view)
+            retro_view = request.data.get("retro_view", project.retro_view)
+            #-------------------------------------------------------------------------add retro view later
 
             if project.archived_at:
                 return Response(
@@ -419,7 +422,7 @@ class ProjectDetailAPIEndpoint(BaseAPIView):
 
             serializer = ProjectUpdateSerializer(
                 project,
-                data={**request.data, "intake_view": intake_view},
+                data={**request.data, "intake_view": intake_view , "retro_view": retro_view}, 
                 context={"workspace_id": workspace.id},
                 partial=True,
             )
@@ -434,7 +437,15 @@ class ProjectDetailAPIEndpoint(BaseAPIView):
                             project=project,
                             is_default=True,
                         )
-
+                if serializer.data.get("retro_view"):
+                    retro_board = RetroBoard.objects.filter(project=project, is_default=True).first()
+                    if not retro_board:
+                        RetroBoard.objects.create(
+                            name=f"{project.name} Retro Board",
+                            project=project,
+                            is_default=True,
+                        )
+                    
                 project = self.get_queryset().filter(pk=serializer.instance.id).first()
 
                 model_activity.delay(

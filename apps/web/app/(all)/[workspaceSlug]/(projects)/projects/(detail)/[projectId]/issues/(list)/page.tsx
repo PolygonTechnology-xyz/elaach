@@ -17,13 +17,13 @@ function ProjectIssuesPage({ params }: Route.ComponentProps) {
 
   // derived values
   const project = getProjectById(projectId);
-  const pageTitle = project?.name ? `${project?.name} - ${t("issue.label", { count: 2 })}` : undefined; // Count is for pluralization
+  const pageTitle = project?.name ? `${project?.name} - ${t("issue.label", { count: 2 })}` : undefined;
 
   return (
     <>
       <PageHead title={pageTitle} />
       <div className="h-full w-full">
-        <ProjectLayoutRoot />
+        <ProjectLayoutRoot /> 
       </div>
     </>
   );

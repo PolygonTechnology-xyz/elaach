@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import { EUserPermissionsLevel, EUserPermissions } from "@plane/constants";
 import { useTranslation } from "@plane/i18n";
-import { CycleIcon, IntakeIcon, ModuleIcon, PageIcon, ViewsIcon, WorkItemsIcon } from "@plane/propel/icons";
+import { CycleIcon, IntakeIcon, ModuleIcon, PageIcon, ViewsIcon, WorkItemsIcon,RetroIcon } from "@plane/propel/icons";
 import type { EUserProjectRoles } from "@plane/types";
 // plane ui
 // components
@@ -61,7 +61,7 @@ export const ProjectNavigation = observer(function ProjectNavigation(props: TPro
   const baseNavigation = useCallback(
     (workspaceSlug: string, projectId: string): TNavigationItem[] => [
       {
-        i18n_key: "sidebar.work_items",
+        i18n_key: "work_items",
         key: "work_items",
         name: "Work items",
         href: `/${workspaceSlug}/projects/${projectId}/issues`,
@@ -111,7 +111,7 @@ export const ProjectNavigation = observer(function ProjectNavigation(props: TPro
         sortOrder: 5,
       },
       {
-        i18n_key: "sidebar.intake",
+        i18n_key: "intake",
         key: "intake",
         name: "Intake",
         href: `/${workspaceSlug}/projects/${projectId}/intake`,
@@ -119,6 +119,16 @@ export const ProjectNavigation = observer(function ProjectNavigation(props: TPro
         access: [EUserPermissions.ADMIN, EUserPermissions.MEMBER, EUserPermissions.GUEST],
         shouldRender: project?.inbox_view ?? false,
         sortOrder: 6,
+      },
+      {
+        i18n_key: "retro",
+        key: "retro",
+        name: "Retro",
+        href: `/${workspaceSlug}/projects/${projectId}/retros`,
+        icon: RetroIcon,
+        access: [EUserPermissions.ADMIN, EUserPermissions.MEMBER, EUserPermissions.GUEST],
+        shouldRender:  project?.retro_view?? false,
+        sortOrder: 7,
       },
     ],
     [project]

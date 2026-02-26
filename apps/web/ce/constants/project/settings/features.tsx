@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 // plane imports
-import { CycleIcon, IntakeIcon, ModuleIcon, PageIcon, ViewsIcon } from "@plane/propel/icons";
+
+import { CycleIcon, IntakeIcon, ModuleIcon, PageIcon, ViewsIcon,RetroIcon } from "@plane/propel/icons";
 import type { IProject } from "@plane/types";
 
 export type TProperties = {
@@ -15,7 +16,7 @@ export type TProperties = {
   href?: string;
 };
 
-type TProjectBaseFeatureKeys = "cycles" | "modules" | "views" | "pages" | "inbox";
+type TProjectBaseFeatureKeys = "cycles" | "modules" | "views" | "pages" | "inbox" | "retro";
 
 type TBaseFeatureList = {
   [key in TProjectBaseFeatureKeys]: TProperties;
@@ -64,6 +65,15 @@ export const PROJECT_BASE_FEATURES_LIST: TBaseFeatureList = {
     title: "Intake",
     description: "Consider and discuss work items before you add them to your project.",
     icon: <IntakeIcon className="h-5 w-5 flex-shrink-0 text-tertiary" />,
+    isPro: false,
+    isEnabled: true,
+  },
+  retro: {
+    key: "retro",
+    property: "retro_view",
+    title: "Retro",
+    description: "Reflect on your team's work and processes to continuously improve.",
+    icon: <RetroIcon className="h-5 w-5 flex-shrink-0 -rotate-90 text-tertiary" />,
     isPro: false,
     isEnabled: true,
   },

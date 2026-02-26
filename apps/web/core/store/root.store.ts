@@ -19,6 +19,8 @@ import type { ICycleStore } from "./cycle.store";
 import { CycleStore } from "./cycle.store";
 import type { ICycleFilterStore } from "./cycle_filter.store";
 import { CycleFilterStore } from "./cycle_filter.store";
+import type { IRetroFilterStore } from "./retro_filter.store";
+import { RetroFilterStore } from "./retro_filter.store";
 import type { IDashboardStore } from "./dashboard.store";
 import { DashboardStore } from "./dashboard.store";
 import type { IEditorAssetStore } from "./editor/asset.store";
@@ -62,6 +64,8 @@ import { ThemeStore } from "./theme.store";
 import type { IUserStore } from "./user";
 import { UserStore } from "./user";
 import type { IWorkspaceRootStore } from "./workspace";
+import type { IRetroStore } from "./retro.store";
+import { IRetroStore as RetroStore } from "./retro.store";
 
 enableStaticRendering(typeof window === "undefined");
 
@@ -70,7 +74,9 @@ export class CoreRootStore {
   projectRoot: IProjectRootStore;
   memberRoot: IMemberRootStore;
   cycle: ICycleStore;
+  retro: IRetroStore;
   cycleFilter: ICycleFilterStore;
+  retroFilter: IRetroFilterStore;
   module: IModuleStore;
   moduleFilter: IModuleFilterStore;
   projectView: IProjectViewStore;
@@ -106,7 +112,9 @@ export class CoreRootStore {
     this.projectRoot = new ProjectRootStore(this);
     this.memberRoot = new MemberRootStore(this as unknown as RootStore);
     this.cycle = new CycleStore(this);
+    this.retro = new RetroStore(this);
     this.cycleFilter = new CycleFilterStore(this);
+    this.retroFilter = new RetroFilterStore(this);
     this.module = new ModulesStore(this);
     this.moduleFilter = new ModuleFilterStore(this);
     this.projectView = new ProjectViewStore(this);
@@ -140,7 +148,9 @@ export class CoreRootStore {
     this.projectRoot = new ProjectRootStore(this);
     this.memberRoot = new MemberRootStore(this as unknown as RootStore);
     this.cycle = new CycleStore(this);
+    this.retro = new RetroStore(this);
     this.cycleFilter = new CycleFilterStore(this);
+    this.retroFilter = new RetroFilterStore(this);
     this.module = new ModulesStore(this);
     this.moduleFilter = new ModuleFilterStore(this);
     this.projectView = new ProjectViewStore(this);

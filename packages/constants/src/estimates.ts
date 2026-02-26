@@ -129,6 +129,15 @@ export const ESTIMATE_SYSTEMS: TEstimateSystems = {
           { id: undefined, key: 6, value: "6" },
         ],
       },
+      custom: {
+        title: "Custom",
+        i18n_title: "project_settings.estimates.systems.time.custom",
+        values: [
+          { id: undefined, key: 1, value: "1" },
+          { id: undefined, key: 2, value: "2" },
+        ],
+        hide: true,
+      },  
     },
     is_available: true,
     is_ee: true,

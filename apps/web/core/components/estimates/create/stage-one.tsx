@@ -24,7 +24,7 @@ export function EstimateCreateStageOne(props: TEstimateCreateStageOne) {
   const currentEstimateSystem = ESTIMATE_SYSTEMS[estimateSystem] || undefined;
 
   if (!currentEstimateSystem) return <></>;
-
+  console.log("🚀 ~ file: stage-one.tsx:17 ~ EstimateCreateStageOne ~ currentEstimateSystem:", currentEstimateSystem) ;
   return (
     <div className="space-y-6">
       <div className="sm:flex sm:items-center sm:space-x-10 sm:space-y-0 gap-2 mb-2">

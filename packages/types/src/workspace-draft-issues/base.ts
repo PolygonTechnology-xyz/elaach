@@ -10,6 +10,7 @@ export type TWorkspaceDraftIssue = {
   label_ids: string[];
   assignee_ids: string[];
   estimate_point: string | undefined;
+  estimate_time : string | undefined;
 
   project_id: string | undefined;
   parent_id: string | undefined;

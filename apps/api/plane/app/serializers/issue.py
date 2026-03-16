@@ -7,12 +7,15 @@ from django.db import IntegrityError
 # Third Party imports
 from rest_framework import serializers
 
+
 # Module imports
 from .base import BaseSerializer, DynamicBaseSerializer
 from .user import UserLiteSerializer
 from .state import StateLiteSerializer
 from .project import ProjectLiteSerializer
 from .workspace import WorkspaceLiteSerializer
+from .estimate import EstimatePointSerializer
+
 from plane.db.models import (
     User,
     Issue,
@@ -187,7 +190,16 @@ class IssueCreateSerializer(BaseSerializer):
                 pk=attrs.get("estimate_point").id,
             ).exists()
         ):
-            raise serializers.ValidationError("Estimate point is not valid please pass a valid estimate_point_id")
+            raise serializers.ValidationError("Estimate point is not valid")
+        
+        if (
+            attrs.get("estimate_time")
+            and not EstimatePoint.objects.filter(
+                project_id=self.context.get("project_id"), 
+                pk=attrs.get("estimate_time").id,
+            ).exists()
+        ):
+            raise serializers.ValidationError("Estimate time is not valid")
 
         return attrs
 
@@ -402,6 +414,10 @@ class IssueRelationSerializer(BaseSerializer):
     relation_type = serializers.CharField(read_only=True)
     state_id = serializers.UUIDField(source="related_issue.state.id", read_only=True)
     priority = serializers.CharField(source="related_issue.priority", read_only=True)
+    
+    estimate_point = serializers.UUIDField(source="related_issue.estimate_point_id", read_only=True)
+    estimate_time = serializers.UUIDField(source="related_issue.estimate_time_id", read_only=True)
+    
     assignee_ids = serializers.ListField(
         child=serializers.PrimaryKeyRelatedField(queryset=User.objects.all()),
         write_only=True,
@@ -418,6 +434,8 @@ class IssueRelationSerializer(BaseSerializer):
             "name",
             "state_id",
             "priority",
+            "estimate_point",
+            "estimate_time",
             "assignee_ids",
             "created_by",
             "created_at",
@@ -442,12 +460,16 @@ class RelatedIssueSerializer(BaseSerializer):
     relation_type = serializers.CharField(read_only=True)
     state_id = serializers.UUIDField(source="issue.state.id", read_only=True)
     priority = serializers.CharField(source="issue.priority", read_only=True)
+    
+    estimate_point_detail = EstimatePointSerializer(source="estimate_point", read_only=True)
+    estimate_time_detail = EstimatePointSerializer(source="estimate_time", read_only=True)
+
     assignee_ids = serializers.ListField(
         child=serializers.PrimaryKeyRelatedField(queryset=User.objects.all()),
         write_only=True,
         required=False,
     )
-
+    
     class Meta:
         model = IssueRelation
         fields = [
@@ -458,6 +480,10 @@ class RelatedIssueSerializer(BaseSerializer):
             "name",
             "state_id",
             "priority",
+            "estimate_point",
+            "estimate_time",
+            "estimate_point_detail",
+            "estimate_time_detail",
             "assignee_ids",
             "created_by",
             "created_at",
@@ -766,6 +792,9 @@ class IssueSerializer(DynamicBaseSerializer):
     sub_issues_count = serializers.IntegerField(read_only=True)
     attachment_count = serializers.IntegerField(read_only=True)
     link_count = serializers.IntegerField(read_only=True)
+    
+    estimate_point_detail = EstimatePointSerializer(source="estimate_point", read_only=True)
+    estimate_time_detail = EstimatePointSerializer(source="estimate_time", read_only=True)
 
     class Meta:
         model = Issue
@@ -776,6 +805,9 @@ class IssueSerializer(DynamicBaseSerializer):
             "sort_order",
             "completed_at",
             "estimate_point",
+            "estimate_time",
+            "estimate_point_detail",
+            "estimate_time_detail",
             "priority",
             "start_date",
             "target_date",
@@ -833,6 +865,9 @@ class IssueListDetailSerializer(serializers.Serializer):
             "sort_order": instance.sort_order,
             "completed_at": instance.completed_at,
             "estimate_point": instance.estimate_point_id,
+            "estimate_time": instance.estimate_time_id,
+            "estimate_point_detail": EstimatePointSerializer(instance.estimate_point).data if instance.estimate_point else None,
+            "estimate_time_detail": EstimatePointSerializer(instance.estimate_time).data if instance.estimate_time else None,
             "priority": instance.priority,
             "start_date": instance.start_date,
             "target_date": instance.target_date,
@@ -936,6 +971,9 @@ class IssuePublicSerializer(BaseSerializer):
     state_detail = StateLiteSerializer(read_only=True, source="state")
     reactions = IssueReactionSerializer(read_only=True, many=True, source="issue_reactions")
     votes = IssueVoteSerializer(read_only=True, many=True)
+    
+    estimate_point_detail = EstimatePointSerializer(source="estimate_point", read_only=True)
+    estimate_time_detail = EstimatePointSerializer(source="estimate_time", read_only=True)
 
     class Meta:
         model = Issue
@@ -953,6 +991,10 @@ class IssuePublicSerializer(BaseSerializer):
             "target_date",
             "reactions",
             "votes",
+            "estimate_point",
+            "estimate_time",
+            "estimate_point_detail",
+            "estimate_time_detail",
         ]
         read_only_fields = fields
 
@@ -975,6 +1017,9 @@ class IssueVersionDetailSerializer(BaseSerializer):
             "parent",
             "state",
             "estimate_point",
+            "estimate_time",
+            "estimate_point_detail",
+            "estimate_time_detail",
             "name",
             "priority",
             "start_date",

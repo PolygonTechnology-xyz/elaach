@@ -112,7 +112,7 @@ export class CoreRootStore {
     this.projectRoot = new ProjectRootStore(this);
     this.memberRoot = new MemberRootStore(this as unknown as RootStore);
     this.cycle = new CycleStore(this);
-    this.retro = new RetroStore(this);
+    this.retro = new (RetroStore as any)(this); 
     this.cycleFilter = new CycleFilterStore(this);
     this.retroFilter = new RetroFilterStore(this);
     this.module = new ModulesStore(this);
@@ -137,9 +137,9 @@ export class CoreRootStore {
   }
 
   resetOnSignOut() {
-    // handling the system theme when user logged out from the app
     localStorage.setItem("theme", "system");
     localStorage.setItem(LANGUAGE_STORAGE_KEY, FALLBACK_LANGUAGE);
+    
     this.router = new RouterStore();
     this.commandPalette = new CommandPaletteStore();
     this.instance = new InstanceStore();
@@ -148,7 +148,7 @@ export class CoreRootStore {
     this.projectRoot = new ProjectRootStore(this);
     this.memberRoot = new MemberRootStore(this as unknown as RootStore);
     this.cycle = new CycleStore(this);
-    this.retro = new RetroStore(this);
+    this.retro = new (RetroStore as any)(this);
     this.cycleFilter = new CycleFilterStore(this);
     this.retroFilter = new RetroFilterStore(this);
     this.module = new ModulesStore(this);

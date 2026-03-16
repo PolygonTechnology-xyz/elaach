@@ -1,112 +1,68 @@
-import { Info } from "lucide-react";
-// plane imports
+"use client";
+
 import { EEstimateSystem, ESTIMATE_SYSTEMS } from "@plane/constants";
 import { useTranslation } from "@plane/i18n";
-import { Tooltip } from "@plane/propel/tooltip";
 import type { TEstimateSystemKeys } from "@plane/types";
-// plane web imports
-import { isEstimateSystemEnabled } from "@/plane-web/components/estimates/helper";
-import { UpgradeBadge } from "@/plane-web/components/workspace/upgrade-badge";
-import { RadioInput } from "../radio-select";
 
 type TEstimateCreateStageOne = {
-  estimateSystem: TEstimateSystemKeys;
-  handleEstimateSystem: (value: TEstimateSystemKeys) => void;
-  handleEstimatePoints: (value: string) => void;
+  handleEstimatePoints: (systemType: TEstimateSystemKeys, templateType: string) => void;
 };
 
 export function EstimateCreateStageOne(props: TEstimateCreateStageOne) {
-  const { estimateSystem, handleEstimateSystem, handleEstimatePoints } = props;
-
-  // i18n
+  const { handleEstimatePoints } = props;
   const { t } = useTranslation();
 
-  const currentEstimateSystem = ESTIMATE_SYSTEMS[estimateSystem] || undefined;
+  // Helper to render each system category (Points and Time)
+  const renderSystemSection = (systemKey: TEstimateSystemKeys) => {
+    const system = ESTIMATE_SYSTEMS[systemKey];
+    if (!system) return null;
 
-  if (!currentEstimateSystem) return <></>;
-  console.log("🚀 ~ file: stage-one.tsx:17 ~ EstimateCreateStageOne ~ currentEstimateSystem:", currentEstimateSystem) ;
+  // console.log("estimate system-------------> ", system)
+
+    return (
+      <div key={systemKey} className="space-y-4 mb-8 last:mb-0">
+        <h3 className="text-16 font-semibold text-primary border-b border-subtle pb-2">
+          {systemKey === EEstimateSystem.POINTS ? "Points" : "Time"}
+        </h3>
+
+        {/* Start from scratch */}
+        <div className="space-y-2">
+          {/* <div className="text-13 font-medium text-secondary">Start from scratch</div>
+          <button
+            className="border border-subtle rounded-md p-3 py-2 text-left w-full hover:bg-custom-background-80 transition-colors"
+            onClick={() => handleEstimatePoints(systemKey, "custom")}
+          >
+            <p className="text-14 font-medium">Custom</p>
+            <p className="text-11 text-tertiary">Add your own {systemKey.toLowerCase()} from scratch.</p>
+          </button> */}
+        </div>
+
+        {/* Templates */}
+        <div className="space-y-2">
+          <div className="text-13 font-medium text-secondary">Choose a template</div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {Object.keys(system.templates).map((name) => (
+              <button
+                key={name}
+                className="border border-subtle rounded-md p-3 py-2 text-left hover:bg-custom-background-80 transition-colors"
+                onClick={() => handleEstimatePoints(systemKey, name)}
+              >
+                <p className="text-14 font-medium">{system.templates[name].title}</p>
+                <p className="text-11 text-tertiary">
+                  {system.templates[name].values.map((v: any) => v.value).join(", ")}
+                </p>
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="space-y-6">
-      <div className="sm:flex sm:items-center sm:space-x-10 sm:space-y-0 gap-2 mb-2">
-        <RadioInput
-          options={Object.keys(ESTIMATE_SYSTEMS)
-            .map((system) => {
-              const currentSystem = system as TEstimateSystemKeys;
-              const isEnabled = isEstimateSystemEnabled(currentSystem);
-              if (!isEnabled) return null;
-              return {
-                label: !ESTIMATE_SYSTEMS[currentSystem]?.is_available ? (
-                  <div className="relative flex items-center gap-2 cursor-no-drop text-tertiary">
-                    {t(ESTIMATE_SYSTEMS[currentSystem]?.i18n_name)}
-                    <Tooltip tooltipContent={t("common.coming_soon")}>
-                      <Info size={12} />
-                    </Tooltip>
-                  </div>
-                ) : !isEnabled ? (
-                  <div className="relative flex items-center gap-2 cursor-no-drop text-tertiary">
-                    {t(ESTIMATE_SYSTEMS[currentSystem]?.i18n_name)}
-                    <UpgradeBadge />
-                  </div>
-                ) : (
-                  <div>{t(ESTIMATE_SYSTEMS[currentSystem]?.i18n_name)}</div>
-                ),
-                value: system,
-                disabled: !isEnabled,
-              };
-            })
-            .filter((option) => option !== null)}
-          name="estimate-radio-input"
-          label={t("project_settings.estimates.create.choose_estimate_system")}
-          labelClassName="text-13 font-medium text-secondary mb-1.5"
-          wrapperClassName="relative flex flex-wrap gap-14"
-          fieldClassName="relative flex items-center gap-1.5"
-          buttonClassName="size-4"
-          selected={estimateSystem}
-          onChange={(value) => handleEstimateSystem(value as TEstimateSystemKeys)}
-        />
-      </div>
-      {ESTIMATE_SYSTEMS[estimateSystem] && (
-        <>
-          <div className="space-y-1.5">
-            <div className="text-13 font-medium text-secondary">
-              {t("project_settings.estimates.create.start_from_scratch")}
-            </div>
-            <button
-              className="border border-subtle rounded-md p-3 py-2.5 text-left space-y-1 w-full block hover:bg-layer-transparent-hover"
-              onClick={() => handleEstimatePoints("custom")}
-            >
-              <p className="text-14 font-medium">{t("project_settings.estimates.create.custom")}</p>
-              <p className="text-11 text-tertiary">
-                Add your own <span className="lowercase">{currentEstimateSystem.name}</span> from scratch.
-              </p>
-            </button>
-          </div>
-
-          <div className="space-y-1.5">
-            <div className="text-13 font-medium text-secondary">
-              {t("project_settings.estimates.create.choose_template")}
-            </div>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-              {Object.keys(currentEstimateSystem.templates).map((name) =>
-                currentEstimateSystem.templates[name]?.hide ? null : (
-                  <button
-                    key={name}
-                    className="border border-subtle rounded-md p-3 py-2.5 text-left space-y-1 hover:bg-surface-2"
-                    onClick={() => handleEstimatePoints(name)}
-                  >
-                    <p className="text-14 font-medium">{currentEstimateSystem.templates[name]?.title}</p>
-                    <p className="text-11 text-tertiary">
-                      {currentEstimateSystem.templates[name]?.values
-                        ?.map((template) => template.value)
-                        ?.join(", ")}
-                    </p>
-                  </button>
-                )
-              )}
-            </div>
-          </div>
-        </>
-      )}
+      {renderSystemSection(EEstimateSystem.POINTS)}
+      {renderSystemSection(EEstimateSystem.TIME)}
     </div>
   );
 }

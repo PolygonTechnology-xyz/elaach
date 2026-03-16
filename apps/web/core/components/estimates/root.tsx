@@ -1,21 +1,17 @@
-import { useState, useEffect } from "react";
+"use client";
+
+import { useState, useMemo } from "react";
 import { observer } from "mobx-react";
 import useSWR from "swr";
-// plane imports
 import { useTranslation } from "@plane/i18n";
-// hooks
 import { EmptyStateCompact } from "@plane/propel/empty-state";
 import { useProjectEstimates } from "@/hooks/store/estimates";
-import { useProject } from "@/hooks/store/use-project";
-// plane web components
 import { UpdateEstimateModal } from "@/plane-web/components/estimates";
-// local imports
-import { SettingsHeading } from "../settings/heading";
 import { CreateEstimateModal } from "./create/modal";
 import { DeleteEstimateModal } from "./delete/modal";
 import { EstimateList } from "./estimate-list";
 import { EstimateLoaderScreen } from "./loader-screen";
-
+// import { Button } from "@plane/propel/button";
 type TEstimateRoot = {
   workspaceSlug: string;
   projectId: string;
@@ -25,11 +21,13 @@ type TEstimateRoot = {
 export const EstimateRoot = observer(function EstimateRoot(props: TEstimateRoot) {
   const { workspaceSlug, projectId, isAdmin } = props;
   
-  // hooks
-  const { currentProjectDetails } = useProject();
-  const { loader, currentActiveEstimateId, archivedEstimateIds, getProjectEstimates } = useProjectEstimates();
+  const { 
+    loader, 
+    estimateIdsByProjectId, 
+    getEstimateById, 
+    getProjectEstimates 
+  } = useProjectEstimates();
   
-  // states
   const [isEstimateCreateModalOpen, setIsEstimateCreateModalOpen] = useState(false);
   const [estimateToUpdate, setEstimateToUpdate] = useState<string | undefined>();
   const [estimateToDelete, setEstimateToDelete] = useState<string | undefined>();
@@ -41,7 +39,19 @@ export const EstimateRoot = observer(function EstimateRoot(props: TEstimateRoot)
     async () => workspaceSlug && projectId && getProjectEstimates(workspaceSlug, projectId)
   );
 
-  
+  const allProjectEstimateIds = estimateIdsByProjectId(projectId) || [];
+
+  const pointsEstimateIds = useMemo(() => 
+    allProjectEstimateIds.filter((id) => getEstimateById(id)?.type?.toLowerCase() === "points"),
+    [allProjectEstimateIds, getEstimateById]
+  );
+
+  const timeEstimateIds = useMemo(() => 
+    allProjectEstimateIds.filter((id) => getEstimateById(id)?.type?.toLowerCase() === "time"),
+    [allProjectEstimateIds, getEstimateById]
+  );
+
+  const hasEstimates = allProjectEstimateIds.length > 0;
 
   return (
     <div className="container mx-auto">
@@ -49,34 +59,56 @@ export const EstimateRoot = observer(function EstimateRoot(props: TEstimateRoot)
         <EstimateLoaderScreen />
       ) : (
         <div className="space-y-6">
-          {/* header */}
-          {/* <SettingsHeading
-            title={t("project_settings.estimates.heading")}
-            description={t("project_settings.estimates.description")}
-          /> */}
-
-          {currentActiveEstimateId ? (
-            <div className="space-y-4">
-              <div className="border-b border-subtle pb-4">
-                <h3 className="text-16 font-medium text-primary">
-                  {t("project_settings.estimates.title")}
-                </h3>
-                <p className="text-13 text-secondary">
-                  {t("project_settings.estimates.enable_description")}
-                </p>
+          {hasEstimates ? (
+            <div className="py-6 space-y-8">
+              <div className=" pb-4 flex justify-between items-end">
+                <div>
+                  <h3 className="text-16 font-medium text-primary">
+                    {t("project_settings.estimates.title")}
+                  </h3>
+                  <p className="text-13 text-secondary">
+                    {t("project_settings.estimates.enable_description")}
+                  </p>
+                </div>
+                {isAdmin && (
+                  <button
+                    onClick={() => setIsEstimateCreateModalOpen(true)}
+                    className="inline-flex items-center justify-center gap-1 whitespace-nowrap transition-colors focus-visible:outline-none disabled:pointer-events-none bg-accent-primary hover:bg-accent-primary-hover active:bg-accent-primary-active disabled:bg-layer-disabled text-on-color disabled:text-on-color-disabled h-6 px-2 text-body-xs-medium rounded-md"
+                  >
+                    + Add More
+                  </button>
+                )}
               </div>
 
-              {/* active estimates section */}
-              <EstimateList
-                estimateIds={[currentActiveEstimateId]}
-                isAdmin={isAdmin}
+              <div className="space-y-8">
+                {pointsEstimateIds.length > 0 && (
+                  <div className="space-y-3">
+                    {/* <h4 className="text-14 font-semibold text-primary uppercase tracking-wider">Points System</h4> */}
+                    <EstimateList
+                      estimateIds={pointsEstimateIds}
+                      isAdmin={isAdmin}
+                      isEstimateEnabled={true} 
+                      isEditable
+                      onEditClick={(id) => setEstimateToUpdate(id)}
+                      onDeleteClick={(id) => setEstimateToDelete(id)}
+                    />
+                  </div>
+                )}
 
-                // make by default true hardcoded 
-                isEstimateEnabled={true} 
-                isEditable
-                onEditClick={(estimateId: string) => setEstimateToUpdate(estimateId)}
-                onDeleteClick={(estimateId: string) => setEstimateToDelete(estimateId)}
-              />
+                {timeEstimateIds.length > 0 && (
+                  <div className="space-y-3">
+                    {/* <h4 className="text-14 font-semibold text-primary uppercase tracking-wider">Time System</h4> */}
+                    <EstimateList
+                      estimateIds={timeEstimateIds}
+                      isAdmin={isAdmin}
+                      isEstimateEnabled={true} 
+                      isEditable
+                      onEditClick={(id) => setEstimateToUpdate(id)}
+                      onDeleteClick={(id) => setEstimateToDelete(id)}
+                    />
+                  </div>
+                )}
+              </div>
             </div>
           ) : (
             <EmptyStateCompact
@@ -94,23 +126,9 @@ export const EstimateRoot = observer(function EstimateRoot(props: TEstimateRoot)
               rootClassName="py-20"
             />
           )}
-
-          {/* archived estimates section */}
-          {archivedEstimateIds && archivedEstimateIds.length > 0 && (
-            <div className="pt-6">
-              <div className="border-b border-subtle space-y-1 pb-4">
-                <h3 className="text-16 font-medium text-primary">Archived estimates</h3>
-                <p className="text-13 text-secondary">
-                  These are estimates from older versions not currently in use.
-                </p>
-              </div>
-              <EstimateList estimateIds={archivedEstimateIds} isAdmin={isAdmin} />
-            </div>
-          )}
         </div>
       )}
 
-      {/* CRUD modals */}
       <CreateEstimateModal
         workspaceSlug={workspaceSlug}
         projectId={projectId}
@@ -120,14 +138,14 @@ export const EstimateRoot = observer(function EstimateRoot(props: TEstimateRoot)
       <UpdateEstimateModal
         workspaceSlug={workspaceSlug}
         projectId={projectId}
-        estimateId={estimateToUpdate ? estimateToUpdate : undefined}
+        estimateId={estimateToUpdate}
         isOpen={!!estimateToUpdate}
         handleClose={() => setEstimateToUpdate(undefined)}
       />
       <DeleteEstimateModal
         workspaceSlug={workspaceSlug}
         projectId={projectId}
-        estimateId={estimateToDelete ? estimateToDelete : undefined}
+        estimateId={estimateToDelete}
         isOpen={!!estimateToDelete}
         handleClose={() => setEstimateToDelete(undefined)}
       />

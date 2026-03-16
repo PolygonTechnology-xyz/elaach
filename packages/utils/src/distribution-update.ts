@@ -97,6 +97,7 @@ const getDistributionDataOfIssue = (
   const isCompleted = COMPLETED_STATE_GROUPS.indexOf(stateGroup) > -1;
   // get estimate point in number for the issue
   const estimatePoint = parseFloat(estimatePointById?.(issue.estimate_point ?? "")?.value ?? "0");
+  const estimateTime = parseFloat(estimatePointById?.(issue.estimate_time ?? "")?.value ?? "0");
 
   // add all the path updates that can be updated directly on the distribution object
   pathUpdates.push({ path: ["total_issues"], value: multiplier });

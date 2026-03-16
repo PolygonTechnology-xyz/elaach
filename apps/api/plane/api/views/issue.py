@@ -49,6 +49,7 @@ from plane.api.serializers import (
     IssueLinkCreateSerializer,
     IssueLinkUpdateSerializer,
     LabelCreateUpdateSerializer,
+    EstimatePointSerializer,
 )
 from plane.app.permissions import (
     ProjectEntityPermission,
@@ -67,6 +68,8 @@ from plane.db.models import (
     ProjectMember,
     CycleIssue,
     Workspace,
+    Estimate, 
+    EstimatePoint,
 )
 from plane.settings.storage import S3Storage
 from plane.bgtasks.storage_metadata_task import get_asset_object_metadata
@@ -235,6 +238,54 @@ class WorkspaceIssueAPIEndpoint(BaseAPIView):
             )
 
 
+class ProjectEstimatePointEndpoint(BaseAPIView):
+    permission_classes = [ProjectEntityPermission]
+
+    def post(self, request, slug, project_id):
+
+        data = request.data
+        estimate_data = data.get("estimate")
+        points_data = data.get("estimate_points")
+
+        estimate, _ = Estimate.objects.get_or_create(
+            project_id=project_id,
+            workspace__slug=slug,
+            type="points", 
+            defaults={'name': estimate_data.get("name", "Points System")}
+        )
+
+        EstimatePoint.objects.filter(estimate=estimate).delete()
+        
+        serializer = EstimatePointSerializer(data=points_data, many=True)
+        if serializer.is_valid():
+            serializer.save(estimate=estimate, project_id=project_id)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class ProjectEstimateTimeEndpoint(BaseAPIView):
+    permission_classes = [ProjectEntityPermission]
+
+    def post(self, request, slug, project_id):
+
+        data = request.data
+        estimate_data = data.get("estimate")
+        time_data = data.get("estimate_points") 
+
+        estimate, _ = Estimate.objects.get_or_create(
+            project_id=project_id,
+            workspace__slug=slug,
+            type="time",
+            defaults={'name': estimate_data.get("name", "Time System")}
+        )
+
+        EstimatePoint.objects.filter(estimate=estimate).delete()
+
+        serializer = EstimatePointSerializer(data=time_data, many=True)
+        if serializer.is_valid():
+            serializer.save(estimate=estimate, project_id=project_id)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
 class IssueListCreateAPIEndpoint(BaseAPIView):
     """
     This viewset provides `list` and `create` on issue level

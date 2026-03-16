@@ -8,9 +8,19 @@ from .project import ProjectBaseModel
 
 
 class Estimate(ProjectBaseModel):
+    TYPE_CHOICES = (
+        ("categories", "Categories"),
+        ("points", "Points"),
+        ("time", "Time"),
+    )
+
     name = models.CharField(max_length=255)
     description = models.TextField(verbose_name="Estimate Description", blank=True)
-    type = models.CharField(max_length=255, default="categories")
+    type = models.CharField(
+        max_length=255, 
+        choices=TYPE_CHOICES, 
+        default="points"
+    )
     last_used = models.BooleanField(default=False)
 
     def __str__(self):
@@ -33,17 +43,24 @@ class Estimate(ProjectBaseModel):
 
 
 class EstimatePoint(ProjectBaseModel):
-    estimate = models.ForeignKey("db.Estimate", on_delete=models.CASCADE, related_name="points")
-    key = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(12)])
+    estimate = models.ForeignKey(
+        "db.Estimate", 
+        on_delete=models.CASCADE, 
+        related_name="points"
+    )
+    key = models.IntegerField(
+        default=0, 
+        validators=[MinValueValidator(0), MaxValueValidator(12)]
+    )
     description = models.TextField(blank=True)
     value = models.CharField(max_length=255)
 
     def __str__(self):
-        """Return name of the estimate"""
+        """Return name of the estimate point"""
         return f"{self.estimate.name} <{self.key}> <{self.value}>"
 
     class Meta:
         verbose_name = "Estimate Point"
         verbose_name_plural = "Estimate Points"
         db_table = "estimate_points"
-        ordering = ("value",)
+        ordering = ("key",)

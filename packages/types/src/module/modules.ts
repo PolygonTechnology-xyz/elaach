@@ -2,7 +2,7 @@ import type { ILinkDetails } from "../issues";
 import type { TIssue } from "../issues/issue";
 import type { IIssueFilterOptions } from "../view-props";
 
-export type TModuleStatus = "backlog" | "planned" | "in-progress" | "paused" | "completed" | "cancelled";
+export type TModuleStatus = "backlog" | "planned" | "in-progress" | "paused" | "completed" | "cancelled" ;
 
 export type TModuleCompletionChartDistribution = {
   [key: string]: number | null;

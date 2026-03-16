@@ -99,15 +99,20 @@ export class IssueStore implements IIssueStore {
    * @param {Partial<TIssue>} issue
    * @returns {void}
    */
-  updateIssue = (issueId: string, issue: Partial<TIssue>) => {
-    if (!issue || !issueId || !this.issuesMap[issueId]) return;
-    runInAction(() => {
-      set(this.issuesMap, [issueId, "updated_at"], getCurrentDateTimeInISO());
-      Object.keys(issue).forEach((key) => {
-        set(this.issuesMap, [issueId, key], issue[key as keyof TIssue]);
-      });
+updateIssue = (issueId: string, issue: Partial<TIssue>) => {
+  if (!issue || !issueId || !this.issuesMap[issueId]) return;
+  runInAction(() => {
+    set(this.issuesMap, [issueId, "updated_at"], getCurrentDateTimeInISO());
+
+    Object.keys(issue).forEach((key) => {
+      const value = issue[key as keyof TIssue];
+      set(this.issuesMap, [issueId, key], value);
+      if (key === "estimate_time") {
+        console.log("Setting estimate_time in store for:", issueId, value);
+      }
     });
-  };
+  });
+};
 
   /**
    * @description This method will remove the issue from the issuesMap

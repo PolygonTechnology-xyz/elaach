@@ -69,7 +69,9 @@ export class EstimatePoint implements IEstimatePoint {
       asJson: computed,
       // actions
       updateEstimatePoint: action,
+      updateEstimatePointObject: action,
     });
+
     this.id = this.data.id;
     this.key = this.data.key;
     this.value = this.data.value;
@@ -84,7 +86,7 @@ export class EstimatePoint implements IEstimatePoint {
   }
 
   // computed
-  get asJson() {
+  get asJson(): IEstimatePointType {
     return {
       id: this.id,
       key: this.key,
@@ -101,11 +103,6 @@ export class EstimatePoint implements IEstimatePoint {
   }
 
   // helper actions
-  /**
-   * @description updating an estimate point object in local store
-   * @param { Partial<IEstimatePointType> } estimatePoint
-   * @returns { void }
-   */
   updateEstimatePointObject = (estimatePoint: Partial<IEstimatePointType>) => {
     Object.keys(estimatePoint).map((key) => {
       const estimatePointKey = key as keyof IEstimatePointType;
@@ -114,11 +111,6 @@ export class EstimatePoint implements IEstimatePoint {
   };
 
   // actions
-  /**
-   * @description updating an estimate point
-   * @param { Partial<IEstimatePointType> } payload
-   * @returns { IEstimatePointType | undefined }
-   */
   updateEstimatePoint = async (
     workspaceSlug: string,
     projectId: string,
@@ -134,17 +126,18 @@ export class EstimatePoint implements IEstimatePoint {
         this.id,
         payload
       );
+
       if (estimatePoint) {
         runInAction(() => {
-          Object.keys(payload).map((key) => {
-            const estimatePointKey = key as keyof IEstimatePointType;
-            set(this, estimatePointKey, estimatePoint[estimatePointKey]);
-          });
+          this.updateEstimatePointObject(payload);
         });
       }
 
       return estimatePoint;
     } catch (error) {
+      runInAction(() => {
+        this.error = { status: "error", message: "Error updating estimate point" };
+      });
       throw error;
     }
   };

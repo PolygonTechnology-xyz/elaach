@@ -40,6 +40,8 @@ export type TIssueOrderByOptions =
   | "-target_date"
   | "estimate_point__key"
   | "-estimate_point__key"
+  | "estimate_time__key"
+  | "-estimate_time__key"
   | "start_date"
   | "-start_date"
   | "link_count"
@@ -146,7 +148,7 @@ export interface IIssueDisplayFilterOptions {
   };
   group_by?: TIssueGroupByOptions;
   sub_group_by?: TIssueGroupByOptions;
-  layout?: any; // TODO: Need to fix this and set it to enum EIssueLayoutTypes
+  layout?: any; 
   order_by?: TIssueOrderByOptions;
   show_empty_groups?: boolean;
   sub_issue?: boolean;
@@ -163,6 +165,8 @@ export interface IIssueDisplayProperties {
   link?: boolean;
   attachment_count?: boolean;
   estimate?: boolean;
+  estimate_time?: boolean;
+  estimate_point?: boolean;
   created_on?: boolean;
   updated_on?: boolean;
   modules?: boolean;

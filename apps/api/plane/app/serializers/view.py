@@ -25,6 +25,7 @@ class ViewIssueListSerializer(serializers.Serializer):
             "sort_order": instance.sort_order,
             "completed_at": instance.completed_at,
             "estimate_point": instance.estimate_point_id,
+            "estimate_time": instance.estimate_time_id,
             "priority": instance.priority,
             "start_date": instance.start_date,
             "target_date": instance.target_date,

@@ -1,3 +1,5 @@
+"use client";
+
 import { observer } from "mobx-react";
 import { Link, Paperclip } from "lucide-react";
 import { ViewsIcon } from "@plane/propel/icons";
@@ -7,10 +9,12 @@ import type { IIssueDisplayProperties } from "@plane/types";
 import { cn } from "@plane/utils";
 // components
 import { WithDisplayPropertiesHOC } from "@/components/issues/issue-layouts/with-display-properties-HOC";
+import { PointEstimateDropdown, TimeEstimateDropdown } from "@/components/estimates";
 // helpers
 import { getDate } from "@/helpers/date-time.helper";
-//// hooks
+// types
 import type { IIssue } from "@/types/issue";
+// local components
 import { IssueBlockCycle } from "./cycle";
 import { IssueBlockDate } from "./due-date";
 import { IssueBlockLabels } from "./labels";
@@ -23,10 +27,12 @@ export interface IIssueProperties {
   issue: IIssue;
   displayProperties: IIssueDisplayProperties | undefined;
   className: string;
+  disabled?: boolean;
+  handleIssueUpdate?: (data: Partial<IIssue>) => void;
 }
 
 export const IssueProperties = observer(function IssueProperties(props: IIssueProperties) {
-  const { issue, displayProperties, className } = props;
+  const { issue, displayProperties, className, disabled = false, handleIssueUpdate } = props;
 
   if (!displayProperties || !issue.project_id) return null;
 
@@ -36,9 +42,15 @@ export const IssueProperties = observer(function IssueProperties(props: IIssuePr
   const maxDate = getDate(issue.target_date);
   maxDate?.setDate(maxDate.getDate());
 
+  // হ্যান্ডলার ফাংশন যা ড্রপডাউন থেকে ভ্যালু নিয়ে ইস্যু আপডেট করবে
+  const handleEstimate = (key: "estimate_point" | "estimate_time", value: string | undefined) => {
+    if (handleIssueUpdate) {
+      handleIssueUpdate({ [key]: value });
+    }
+  };
+
   return (
     <div className={className}>
-      {/* basic properties */}
       {/* state */}
       {issue.state_id && (
         <WithDisplayPropertiesHOC displayProperties={displayProperties} displayPropertyKey="state">
@@ -109,21 +121,33 @@ export const IssueProperties = observer(function IssueProperties(props: IIssuePr
         </WithDisplayPropertiesHOC>
       )}
 
-      {/* estimates */}
-      {/* {projectId && areEstimateEnabledByProjectId(projectId?.toString()) && (
-        <WithDisplayPropertiesHOC displayProperties={displayProperties} displayPropertyKey="estimate">
-          <div className="h-5">
-            <EstimateDropdown
-              value={issue.estimate_point ?? undefined}
-              onChange={handleEstimate}
-              projectId={issue.project_id}
-              disabled={isReadOnly}
-              buttonVariant="border-with-text"
-              showTooltip
-            />
-          </div>
-        </WithDisplayPropertiesHOC>
-      )} */}
+      {/* estimate_point (Story Point) */}
+      <WithDisplayPropertiesHOC displayProperties={displayProperties} displayPropertyKey="estimate_point">
+        <div className="h-5">
+          <PointEstimateDropdown
+            value={issue?.estimate_point}
+            onChange={(val) => handleEstimate("estimate_point", val)}
+            projectId={issue.project_id}
+            disabled={disabled}
+            buttonVariant="transparent-with-text"
+            showTooltip
+          />
+        </div>
+      </WithDisplayPropertiesHOC>
+
+      {/* estimate_time (Estimate Time) */}
+      <WithDisplayPropertiesHOC displayProperties={displayProperties} displayPropertyKey="estimate_time">
+        <div className="h-5">
+          <TimeEstimateDropdown
+            value={issue?.estimate_time}
+            onChange={(val) => handleEstimate("estimate_time", val)}
+            projectId={issue.project_id}
+            disabled={disabled}
+            buttonVariant="transparent-with-text"
+            showTooltip
+          />
+        </div>
+      </WithDisplayPropertiesHOC>
 
       {/* extra render properties */}
       {/* sub-issues */}

@@ -1,29 +1,35 @@
 "use client";
-import { FC, useState, useEffect} from "react";
+import { FC, useState, useEffect } from "react";
 import { observer } from "mobx-react";
-import { Signal, Tag, Triangle, LayoutPanelTop, CalendarClock, CalendarCheck2, Users, UserCircle2,Timer } from "lucide-react";
+import {
+  Signal,
+  Tag,
+  Triangle,
+  LayoutPanelTop,
+  CalendarClock,
+  CalendarCheck2,
+  Users,
+  UserCircle2,
+  Timer,
+} from "lucide-react";
 import { API_BASE_URL } from "@plane/constants";
 
-// i18n
 import { useTranslation } from "@plane/i18n";
-// ui icons
 import { DiceIcon, DoubleCircleIcon, ContrastIcon } from "@plane/propel/icons";
 import { cn, getDate, renderFormattedPayloadDate, shouldHighlightIssueDueDate } from "@plane/utils";
 
-// components
 import { DateDropdown } from "@/components/dropdowns/date";
-import { EstimateDropdown } from "@/components/dropdowns/estimate";
+import { PointEstimateDropdown, TimeEstimateDropdown } from "@/components/dropdowns/estimate";
 import { ButtonAvatars } from "@/components/dropdowns/member/avatar";
 import { MemberDropdown } from "@/components/dropdowns/member/dropdown";
 import { PriorityDropdown } from "@/components/dropdowns/priority";
 import { StateDropdown } from "@/components/dropdowns/state/dropdown";
-// helpers
+
 import { useIssueDetail } from "@/hooks/store/use-issue-detail";
 import { useMember } from "@/hooks/store/use-member";
 import { useProject } from "@/hooks/store/use-project";
 import { useProjectState } from "@/hooks/store/use-project-state";
-// plane web components
-// import { IssueActivityWorklogCreateButton } from "@/plane-web/components/issues/worklog/activity/worklog-create-button";
+
 import { WorkItemAdditionalSidebarProperties } from "@/plane-web/components/issues/issue-details/additional-properties";
 import { IssueParentSelectRoot } from "@/plane-web/components/issues/issue-details/parent-select-root";
 import { IssueWorklogProperty } from "@/plane-web/components/issues/worklog/property";
@@ -40,50 +46,38 @@ interface IPeekOverviewProperties {
   issueOperations: TIssueOperations;
 }
 
-
 export const PeekOverviewProperties: FC<IPeekOverviewProperties> = observer((props) => {
   const { workspaceSlug, projectId, issueId, issueOperations, disabled } = props;
   const { t } = useTranslation();
   const [totalSeconds, setTotalSeconds] = useState(0);
 
-
   useEffect(() => {
-  if (!workspaceSlug || !projectId || !issueId) return;
+    if (!workspaceSlug || !projectId || !issueId) return;
 
-  const fetchTrackedTime = async () => {
-    try {
-      const url = `${API_BASE_URL}/api/workspaces/${workspaceSlug}/projects/${projectId}/issues/${issueId}/tracked-times/total/`;
+    const fetchTrackedTime = async () => {
+      try {
+        const url = `${API_BASE_URL}/api/workspaces/${workspaceSlug}/projects/${projectId}/issues/${issueId}/tracked-times/total/`;
+        const response = await fetch(url, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
 
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-      });
-
-
-
-      console.log("GET Request URL:", url);
-      console.log("Response:", response);
-
-      if (response.ok) {
-        const data = await response.json();
-        const total = data.total_seconds || data.total_tracked_time_seconds || 0;
-        console.log("Total Tracked Time (seconds):", total);
-        setTotalSeconds(total);
-      } else {
-        console.error('Failed to fetch tracked time');
+        if (response.ok) {
+          const data = await response.json();
+          const total = data.total_seconds || data.total_tracked_time_seconds || 0;
+          setTotalSeconds(total);
+        }
+      } catch (error) {
+        console.error("Error fetching time:", error);
       }
-    } catch (error) {
-      console.error("Error fetching time:", error);
-    }
-  };
+    };
 
-  fetchTrackedTime();
-}, [workspaceSlug, projectId, issueId]);
+    fetchTrackedTime();
+  }, [workspaceSlug, projectId, issueId]);
 
-  // store hooks
   const { getProjectById } = useProject();
   const {
     issue: { getIssueById },
@@ -91,30 +85,24 @@ export const PeekOverviewProperties: FC<IPeekOverviewProperties> = observer((pro
   const { getStateById } = useProjectState();
   const { getUserDetails } = useMember();
 
-  // derived values
   const issue = getIssueById(issueId);
   if (!issue) return <></>;
+
   const createdByDetails = getUserDetails(issue?.created_by);
   const projectDetails = getProjectById(issue.project_id);
-  const isEstimateEnabled = projectDetails?.estimate;
   const stateDetails = getStateById(issue.state_id);
 
-
   const minDate = getDate(issue.start_date);
-  minDate?.setDate(minDate.getDate());
-
   const maxDate = getDate(issue.target_date);
-  maxDate?.setDate(maxDate.getDate());
-  // console.log("=====>issueId in peek overview properties: ", issueId);
-  // console.log("result will be in booolean : ",isEstimateEnabled);
-  // console.log("issue in peek overview properties: ", issue);
-
+  // console.log("Full Issue Object:", issue);
+  console.log("estimate_time------", issue.estimate_time);
+  console.log("estimate_point-------", issue.estimate_point);
+  console.log("issues------", issue)
   return (
     <div>
       <h6 className="text-sm font-medium">{t("common.properties")}</h6>
-      {/* TODO: render properties using a common component */}
       <div className={`w-full space-y-2 mt-3 ${disabled ? "opacity-60" : ""}`}>
-        {/* state */}
+        {/* State */}
         <div className="flex w-full items-center gap-3 h-8">
           <div className="flex items-center gap-1 w-1/4 flex-shrink-0 text-sm text-custom-text-300">
             <DoubleCircleIcon className="h-4 w-4 flex-shrink-0" />
@@ -134,7 +122,7 @@ export const PeekOverviewProperties: FC<IPeekOverviewProperties> = observer((pro
           />
         </div>
 
-        {/* assignee */}
+        {/* Assignees */}
         <div className="flex w-full items-center gap-3 h-8">
           <div className="flex items-center gap-1 w-1/4 flex-shrink-0 text-sm text-custom-text-300">
             <Users className="h-4 w-4 flex-shrink-0" />
@@ -157,7 +145,7 @@ export const PeekOverviewProperties: FC<IPeekOverviewProperties> = observer((pro
           />
         </div>
 
-        {/* priority */}
+        {/* Priority */}
         <div className="flex w-full items-center gap-3 h-8">
           <div className="flex items-center gap-1 w-1/4 flex-shrink-0 text-sm text-custom-text-300">
             <Signal className="h-4 w-4 flex-shrink-0" />
@@ -174,7 +162,7 @@ export const PeekOverviewProperties: FC<IPeekOverviewProperties> = observer((pro
           />
         </div>
 
-        {/* created by */}
+        {/* Created By */}
         {createdByDetails && (
           <div className="flex w-full items-center gap-3 h-8">
             <div className="flex items-center gap-1 w-1/4 flex-shrink-0 text-sm text-custom-text-300">
@@ -186,14 +174,14 @@ export const PeekOverviewProperties: FC<IPeekOverviewProperties> = observer((pro
                 showTooltip
                 userIds={createdByDetails?.display_name.includes("-intake") ? null : createdByDetails?.id}
               />
-              <span className="flex-grow truncate  leading-5">
+              <span className="flex-grow truncate leading-5">
                 {createdByDetails?.display_name.includes("-intake") ? "Plane" : createdByDetails?.display_name}
               </span>
             </div>
           </div>
         )}
 
-        {/* start date */}
+        {/* Start Date */}
         <div className="flex w-full items-center gap-3 h-8">
           <div className="flex items-center gap-1 w-1/4 flex-shrink-0 text-sm text-custom-text-300">
             <CalendarClock className="h-4 w-4 flex-shrink-0" />
@@ -215,12 +203,10 @@ export const PeekOverviewProperties: FC<IPeekOverviewProperties> = observer((pro
             buttonClassName={`text-sm ${issue?.start_date ? "" : "text-custom-text-400"}`}
             hideIcon
             clearIconClassName="h-3 w-3 hidden group-hover:inline"
-            // TODO: add this logic
-            // showPlaceholderIcon
           />
         </div>
 
-        {/* due date */}
+        {/* Due Date */}
         <div className="flex w-full items-center gap-3 h-8">
           <div className="flex items-center gap-1 w-1/4 flex-shrink-0 text-sm text-custom-text-300">
             <CalendarCheck2 className="h-4 w-4 flex-shrink-0" />
@@ -245,36 +231,54 @@ export const PeekOverviewProperties: FC<IPeekOverviewProperties> = observer((pro
             })}
             hideIcon
             clearIconClassName="h-3 w-3 hidden group-hover:inline !text-custom-text-100"
-            // TODO: add this logic
-            // showPlaceholderIcon
           />
         </div>
 
-        {/* estimate */}
-        {/*--------------------------------------- leaving here for further work for Estimation time------------------------ */}
-        {isEstimateEnabled && (
-          <div className="flex w-full items-center gap-3 h-8">
-            <div className="flex items-center gap-1 w-1/4 flex-shrink-0 text-sm text-custom-text-300">
-              <Triangle className="h-4 w-4 flex-shrink-0" />
-              <span>{t("common.estimate")}</span>
-            </div>
-            <EstimateDropdown
-              value={issue.estimate_point ?? undefined}
-              onChange={(val) => issueOperations.update(workspaceSlug, projectId, issueId, { estimate_point: val })}
-              projectId={projectId}
-              disabled={disabled}
-              buttonVariant="transparent-with-text"
-              className="w-3/4 flex-grow group"
-              buttonContainerClassName="w-full text-left"
-              buttonClassName={`text-sm ${issue?.estimate_point !== undefined ? "" : "text-custom-text-400"}`}
-              placeholder="None"
-              hideIcon
-              dropdownArrow
-              dropdownArrowClassName="h-3.5 w-3.5 hidden group-hover:inline"
-            />
+        {/* Estimate Time (New Dropdown) */}
+        <div className="flex w-full items-center gap-3 h-8">
+          <div className="flex items-center gap-1 w-1/4 flex-shrink-0 text-sm text-custom-text-300">
+            <Timer className="h-4 w-4 flex-shrink-0" />
+            <span>Estimate Time</span>
           </div>
-        )}
+          <TimeEstimateDropdown
+            value={issue.estimate_time}
+            onChange={(val) => issueOperations.update(workspaceSlug, projectId, issueId, { estimate_time: val })}
+            projectId={projectId}
+            disabled={disabled}
+            buttonVariant="transparent-with-text"
+            className="w-3/4 flex-grow group"
+            buttonContainerClassName="w-full text-left"
+            buttonClassName={`text-sm ${issue?.estimate_time ? "" : "text-custom-text-400"}`}
+            placeholder="None"
+            hideIcon
+            dropdownArrow
+            dropdownArrowClassName="h-3.5 w-3.5 hidden group-hover:inline"
+          />
+        </div>
 
+        {/* Story Point (New Dropdown) */}
+        <div className="flex w-full items-center gap-3 h-8">
+          <div className="flex items-center gap-1 w-1/4 flex-shrink-0 text-sm text-custom-text-300">
+            <Triangle className="h-4 w-4 flex-shrink-0" />
+            <span>Story Point</span>
+          </div>
+          <PointEstimateDropdown
+            value={issue.estimate_point}
+            onChange={(val) => issueOperations.update(workspaceSlug, projectId, issueId, { estimate_point: val })}
+            projectId={projectId}
+            disabled={disabled}
+            buttonVariant="transparent-with-text"
+            className="w-3/4 flex-grow group"
+            buttonContainerClassName="w-full text-left"
+            buttonClassName={`text-sm ${issue?.estimate_point ? "" : "text-custom-text-400"}`}
+            placeholder="None"
+            hideIcon
+            dropdownArrow
+            dropdownArrowClassName="h-3.5 w-3.5 hidden group-hover:inline"
+          />
+        </div>
+
+        {/* Modules */}
         {projectDetails?.module_view && (
           <div className="flex w-full items-center gap-3 min-h-8 h-full">
             <div className="flex items-center gap-1 w-1/4 flex-shrink-0 text-sm text-custom-text-300">
@@ -292,6 +296,7 @@ export const PeekOverviewProperties: FC<IPeekOverviewProperties> = observer((pro
           </div>
         )}
 
+        {/* Cycle */}
         {projectDetails?.cycle_view && (
           <div className="flex w-full items-center gap-3 h-8">
             <div className="flex items-center gap-1 w-1/4 flex-shrink-0 text-sm text-custom-text-300">
@@ -309,7 +314,7 @@ export const PeekOverviewProperties: FC<IPeekOverviewProperties> = observer((pro
           </div>
         )}
 
-        {/* parent */}
+        {/* Parent Issue */}
         <div className="flex w-full items-center gap-3 h-8">
           <div className="flex items-center gap-1 w-1/4 flex-shrink-0 text-sm text-custom-text-300">
             <LayoutPanelTop className="h-4 w-4 flex-shrink-0" />
@@ -325,7 +330,7 @@ export const PeekOverviewProperties: FC<IPeekOverviewProperties> = observer((pro
           />
         </div>
 
-        {/* label */}
+        {/* Labels */}
         <div className="flex w-full items-center gap-3 min-h-8">
           <div className="flex items-center gap-1 w-1/4 flex-shrink-0 text-sm text-custom-text-300">
             <Tag className="h-4 w-4 flex-shrink-0" />
@@ -336,23 +341,26 @@ export const PeekOverviewProperties: FC<IPeekOverviewProperties> = observer((pro
           </div>
         </div>
 
-        {/*---------------------------------------------Tracked time-------------------------------------------------*/}
+        {/* Tracked Time Display */}
         <div className="flex w-full items-center gap-3 min-h-8">
           <div className="flex items-center gap-1 w-1/4 flex-shrink-0 text-sm text-custom-text-300">
             <Timer className="h-4 w-4 flex-shrink-0 text-custom-text-300" />
-            <span>Tracked Time </span>
+            <span>Tracked Time</span>
           </div>
-          <div className="w-3/4 flex-grow text-sm">
+          <div className="w-3/4 flex-grow text-sm flex items-center gap-2">
+            <span>
               {Math.floor(totalSeconds / 3600)}h {Math.floor((totalSeconds % 3600) / 60)}m
-          </div>
-          {/* <IssueActivityWorklogCreateButton /> */}
-           <IssueWorklogProperty
+            </span>
+            <IssueWorklogProperty
               workspaceSlug={workspaceSlug}
               projectId={projectId}
               issueId={issueId}
               disabled={disabled}
             />
+          </div>
         </div>
+
+        {/* Custom Attributes */}
         <WorkItemAdditionalSidebarProperties
           workItemId={issue.id}
           workItemTypeId={issue.type_id}

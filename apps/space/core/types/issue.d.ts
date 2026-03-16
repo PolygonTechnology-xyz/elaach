@@ -56,7 +56,15 @@ export interface IIssue extends Pick<
   | "sub_issues_count"
   | "link_count"
   | "estimate_point"
+  | "estimate_time"
 > {
+
+  estimate_point: string | null;
+  estimate_time: string | null;
+  
+  estimate_point_detail?: any;
+  estimate_time_detail?: any;
+
   comments: TIssuePublicComment[];
   reaction_items: IIssueReaction[];
   vote_items: IVote[];

@@ -132,6 +132,14 @@ class DraftIssueCreateSerializer(BaseSerializer):
             ).exists()
         ):
             raise serializers.ValidationError("Estimate point is not valid please pass a valid estimate_point_id")
+        
+        if (attrs.get("estimate_time")
+            and not EstimatePoint.objects.filter(
+                project_id=self.context.get("project_id"), 
+                pk=attrs.get("estimate_time").id,
+            ).exists()
+        ):
+            raise serializers.ValidationError("Estimate time is not valid please pass a valid Estimate time id")
 
         return attrs
 

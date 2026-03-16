@@ -184,6 +184,7 @@ from .estimate.base import (
     ProjectEstimatePointEndpoint,
     BulkEstimatePointEndpoint,
     EstimatePointEndpoint,
+    ProjectEstimateTimeEndpoint,
 )
 
 from .intake.base import (

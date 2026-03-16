@@ -141,6 +141,13 @@ class IssueSerializer(BaseSerializer):
         ):
             raise serializers.ValidationError("Estimate point is not valid please pass a valid estimate_point_id")
 
+        if (data.get("estimate_time")
+            and not EstimatePoint.objects.filter(
+                project_id=self.context.get("project_id"), 
+                pk=data.get("estimate_time").id
+            ).exists()
+        ):
+            raise serializers.ValidationError("Estimate time is not valid please pass a valid Estimate time id")
         return data
 
     def create(self, validated_data):

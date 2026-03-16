@@ -25,6 +25,9 @@ export interface IEstimate {
   workspace: string | undefined;
   project: string | undefined;
   last_used: boolean | undefined;
+  // Dual Estimation mapping fields
+  estimate_point?: string; 
+  estimate_time?: string;  
   created_at: Date | undefined;
   updated_at: Date | undefined;
   created_by: string | undefined;
@@ -36,11 +39,19 @@ export interface IEstimateFormData {
     name?: string;
     type?: string;
     last_used?: boolean;
+    // backend endpoint fields for dual estimation
+    estimate_point?: TEstimatePointsObject[]; 
+    estimate_time?: TEstimatePointsObject[];
   };
-  estimate_points: {
+  estimate_points?: {
     id?: string | undefined;
     key: number;
     value: string;
+  }[];
+  estimate_times?: {
+    id?: string | undefined;
+    key : number;
+    value : string;
   }[];
 }
 

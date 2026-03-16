@@ -9,7 +9,7 @@ import { renderFormattedPayloadDate, getDate, getTabIndex } from "@plane/utils";
 // components
 import { CycleDropdown } from "@/components/dropdowns/cycle";
 import { DateDropdown } from "@/components/dropdowns/date";
-import { EstimateDropdown } from "@/components/dropdowns/estimate";
+import {PointEstimateDropdown, TimeEstimateDropdown } from "@/components/dropdowns/estimate";
 import { IntakeStateDropdown } from "@/components/dropdowns/intake-state/dropdown";
 import { MemberDropdown } from "@/components/dropdowns/member/dropdown";
 import { ModuleDropdown } from "@/components/dropdowns/module/dropdown";
@@ -20,6 +20,7 @@ import { IssueLabelSelect } from "@/components/issues/select";
 // hooks
 import { useProjectEstimates } from "@/hooks/store/estimates";
 import { usePlatformOS } from "@/hooks/use-platform-os";
+import { EstimatePoint } from "@/store/estimates/estimate-point";
 
 type TInboxIssueProperties = {
   projectId: string;
@@ -47,6 +48,7 @@ export const InboxIssueProperties = observer(function InboxIssueProperties(props
 
   const maxDate = getDate(targetDate);
   maxDate?.setDate(maxDate.getDate());
+
 
   return (
     <div className="relative flex flex-wrap gap-2 items-center">
@@ -152,16 +154,30 @@ export const InboxIssueProperties = observer(function InboxIssueProperties(props
         </div>
       )}
 
-      {/* estimate */}
+      {/* estimate point */}
       {isVisible && projectId && areEstimateEnabledByProjectId(projectId) && (
         <div className="h-7">
-          <EstimateDropdown
+          <PointEstimateDropdown
             value={data?.estimate_point || undefined}
             onChange={(estimatePoint) => handleData("estimate_point", estimatePoint)}
             projectId={projectId}
             buttonVariant="border-with-text"
-            placeholder="Estimate"
+            placeholder="Points" 
             tabIndex={getIndex("estimate_point")}
+          />
+        </div>
+      )}
+
+      {/* estimate time */}
+      {isVisible && projectId && areEstimateEnabledByProjectId(projectId) && (
+        <div className="h-7">
+          <TimeEstimateDropdown
+            value={data?.estimate_time || undefined}
+            onChange={(estimateTime) => handleData("estimate_time", estimateTime)}
+            projectId={projectId}
+            buttonVariant="border-with-text"
+            placeholder="Time" 
+            tabIndex={getIndex("estimate_time")} 
           />
         </div>
       )}

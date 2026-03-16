@@ -14,7 +14,7 @@ import { EstimatePointItemPreview } from "./preview";
 type TEstimatePointCreateRoot = {
   workspaceSlug: string;
   projectId: string;
-  estimateId: string | undefined;
+  estimateId?: string | undefined;
   estimateType: TEstimateSystemKeys;
   estimatePoints: TEstimatePointsObject[];
   setEstimatePoints: Dispatch<SetStateAction<TEstimatePointsObject[] | undefined>>;

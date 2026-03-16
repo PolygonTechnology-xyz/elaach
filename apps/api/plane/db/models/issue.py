@@ -34,7 +34,9 @@ def get_default_properties():
         "sub_issue_count": True,
         "link": True,
         "attachment_count": True,
+        #added estimation fields in default properties
         "estimate": True,
+        "estimate_time": True,
         "created_on": True,
         "updated_on": True,
     }
@@ -46,6 +48,8 @@ def get_default_filters():
         "state": None,
         "state_group": None,
         "assignees": None,
+        "estimate": None,
+        "estimate_time": None,
         "created_by": None,
         "labels": None,
         "start_date": None,
@@ -73,6 +77,7 @@ def get_default_display_properties():
         "created_on": True,
         "due_date": True,
         "estimate": True,
+        "estimate_time": True,
         "key": True,
         "labels": True,
         "link": True,
@@ -127,11 +132,18 @@ class Issue(ProjectBaseModel):
         blank=True,
         related_name="state_issue",
     )
-    point = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(12)], null=True, blank=True)
+    # point = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(12)], null=True, blank=True)
     estimate_point = models.ForeignKey(
         "db.EstimatePoint",
         on_delete=models.SET_NULL,
         related_name="issue_estimates",
+        null=True,
+        blank=True,
+    )
+    estimate_time = models.ForeignKey(
+        "db.EstimatePoint",
+        on_delete=models.SET_NULL,
+        related_name="issue_time_estimates",
         null=True,
         blank=True,
     )
@@ -709,7 +721,11 @@ class IssueVersion(ProjectBaseModel):
 
     parent = models.UUIDField(blank=True, null=True)
     state = models.UUIDField(blank=True, null=True)
+    
+    #added estimations here
     estimate_point = models.UUIDField(blank=True, null=True)
+    estimate_time = models.UUIDField(blank=True, null=True)
+    
     name = models.CharField(max_length=255, verbose_name="Issue Name")
     priority = models.CharField(
         max_length=30,
@@ -775,7 +791,10 @@ class IssueVersion(ProjectBaseModel):
                 issue=issue,
                 parent=issue.parent_id,
                 state=issue.state_id,
+                
+                #added estimation fields in issue version --- IGNORE ---
                 estimate_point=issue.estimate_point_id,
+                estimate_time=issue.estimate_time_id,
                 name=issue.name,
                 priority=issue.priority,
                 start_date=issue.start_date,

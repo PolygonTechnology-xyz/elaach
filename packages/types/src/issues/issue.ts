@@ -47,7 +47,11 @@ export type TBaseIssue = {
   label_ids: string[];
   assignee_ids: string[];
   estimate_point: string | null;
+  estimate_time : string | null;
 
+  estimate_point_detail  : string | null;
+  estimate_time_detail  : string | null;
+  
   sub_issues_count: number;
   attachment_count: number;
   link_count: number;
@@ -95,6 +99,8 @@ export type TIssue = TBaseIssue & {
   // sourceIssueId is used to store the original issue id when creating a copy of an issue. Used in cloning property values. It is not a part of the API response.
   sourceIssueId?: string;
   state__group?: TStateGroups | null;
+  estimate_point_detail?: any;
+  estimae_time_detail?: any;
 };
 
 export type TIssueMap = {
@@ -142,6 +148,9 @@ export type TBulkIssueProperties = Pick<
   | "module_ids"
   | "cycle_id"
   | "estimate_point"
+  | "estimate_time"
+  | "estimate_point_detail"
+  | "estimate_time_detail"
 >;
 
 export type TBulkOperationsPayload = {
@@ -176,6 +185,7 @@ export interface IPublicIssue extends Pick<
   | "sub_issues_count"
   | "link_count"
   | "estimate_point"
+  | "estimate_time"
 > {
   comments: TIssuePublicComment[];
   reaction_items: IIssuePublicReaction[];

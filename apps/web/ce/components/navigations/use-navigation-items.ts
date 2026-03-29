@@ -17,7 +17,7 @@ type UseNavigationItemsProps = {
   ) => boolean;
 };
 
-console.log("---------------------------------------------------> use-navigation-items loaded");
+// console.log("---------------------------------------------------> use-navigation-items loaded");
 export const useNavigationItems = ({
   workspaceSlug,
   projectId,

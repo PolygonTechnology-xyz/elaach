@@ -199,7 +199,7 @@ class CycleListCreateAPIEndpoint(BaseAPIView):
             data = CycleSerializer(
                 queryset,
                 many=True,
-                fields=self.fields,
+                # fields=self.fields,
                 expand=self.expand,
                 context={"project": project},
             ).data
@@ -214,7 +214,7 @@ class CycleListCreateAPIEndpoint(BaseAPIView):
                 on_results=lambda cycles: CycleSerializer(
                     cycles,
                     many=True,
-                    fields=self.fields,
+                    # fields=self.fields,
                     expand=self.expand,
                     context={"project": project},
                 ).data,
@@ -229,7 +229,7 @@ class CycleListCreateAPIEndpoint(BaseAPIView):
                 on_results=lambda cycles: CycleSerializer(
                     cycles,
                     many=True,
-                    fields=self.fields,
+                    # fields=self.fields,
                     expand=self.expand,
                     context={"project": project},
                 ).data,
@@ -244,7 +244,7 @@ class CycleListCreateAPIEndpoint(BaseAPIView):
                 on_results=lambda cycles: CycleSerializer(
                     cycles,
                     many=True,
-                    fields=self.fields,
+                    # fields=self.fields,
                     expand=self.expand,
                     context={"project": project},
                 ).data,
@@ -259,7 +259,7 @@ class CycleListCreateAPIEndpoint(BaseAPIView):
                 on_results=lambda cycles: CycleSerializer(
                     cycles,
                     many=True,
-                    fields=self.fields,
+                    # fields=self.fields,
                     expand=self.expand,
                     context={"project": project},
                 ).data,
@@ -270,7 +270,7 @@ class CycleListCreateAPIEndpoint(BaseAPIView):
             on_results=lambda cycles: CycleSerializer(
                 cycles,
                 many=True,
-                fields=self.fields,
+                # fields=self.fields,
                 expand=self.expand,
                 context={"project": project},
             ).data,
@@ -362,6 +362,7 @@ class CycleDetailAPIEndpoint(BaseAPIView):
 
     def get_queryset(self):
         return (
+            #add uat status here?
             Cycle.objects.filter(workspace__slug=self.kwargs.get("slug"))
             .filter(project_id=self.kwargs.get("project_id"))
             .filter(
@@ -609,6 +610,7 @@ class CycleArchiveUnarchiveAPIEndpoint(BaseAPIView):
 
     def get_queryset(self):
         return (
+            #add uat status here?
             Cycle.objects.filter(workspace__slug=self.kwargs.get("slug"))
             .filter(project_id=self.kwargs.get("project_id"))
             .filter(

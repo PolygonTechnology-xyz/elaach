@@ -54,10 +54,28 @@ def get_default_display_properties():
 
 
 class Cycle(ProjectBaseModel):
+    UAT_SCORE_CHOICES = (
+        ("#000000", "Black"),
+        ("#D32F2F", "Red"),
+        ("#388E3C", "Green"),
+        ("#FBC02D", "Amber"),
+    )
     name = models.CharField(max_length=255, verbose_name="Cycle Name")
-    description = models.TextField(verbose_name="Cycle Description", blank=True)
-    start_date = models.DateTimeField(verbose_name="Start Date", blank=True, null=True)
-    end_date = models.DateTimeField(verbose_name="End Date", blank=True, null=True)
+    description = models.TextField(
+        verbose_name="Cycle Description", blank=True)
+    
+    start_date = models.DateTimeField(
+        verbose_name="Start Date", blank=True, null=True)
+    
+    end_date = models.DateTimeField(
+        verbose_name="End Date", blank=True, null=True)
+    
+    uat_status = models.CharField(
+        max_length=7,
+        choices=UAT_SCORE_CHOICES,
+        default="#FFBF00",
+        verbose_name="UAT Status",
+    )
     owned_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -72,7 +90,8 @@ class Cycle(ProjectBaseModel):
     logo_props = models.JSONField(default=dict)
     # timezone
     TIMEZONE_CHOICES = tuple(zip(pytz.common_timezones, pytz.common_timezones))
-    timezone = models.CharField(max_length=255, default="UTC", choices=TIMEZONE_CHOICES)
+    timezone = models.CharField(
+        max_length=255, default="UTC", choices=TIMEZONE_CHOICES)
     version = models.IntegerField(default=1)
 
     class Meta:
@@ -102,8 +121,10 @@ class CycleIssue(ProjectBaseModel):
     Cycle Issues
     """
 
-    issue = models.ForeignKey("db.Issue", on_delete=models.CASCADE, related_name="issue_cycle")
-    cycle = models.ForeignKey(Cycle, on_delete=models.CASCADE, related_name="issue_cycle")
+    issue = models.ForeignKey(
+        "db.Issue", on_delete=models.CASCADE, related_name="issue_cycle")
+    cycle = models.ForeignKey(
+        Cycle, on_delete=models.CASCADE, related_name="issue_cycle")
 
     class Meta:
         unique_together = ["issue", "cycle", "deleted_at"]
@@ -124,7 +145,8 @@ class CycleIssue(ProjectBaseModel):
 
 
 class CycleUserProperties(ProjectBaseModel):
-    cycle = models.ForeignKey("db.Cycle", on_delete=models.CASCADE, related_name="cycle_user_properties")
+    cycle = models.ForeignKey(
+        "db.Cycle", on_delete=models.CASCADE, related_name="cycle_user_properties")
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -132,7 +154,8 @@ class CycleUserProperties(ProjectBaseModel):
     )
     filters = models.JSONField(default=get_default_filters)
     display_filters = models.JSONField(default=get_default_display_filters)
-    display_properties = models.JSONField(default=get_default_display_properties)
+    display_properties = models.JSONField(
+        default=get_default_display_properties)
     rich_filters = models.JSONField(default=dict)
 
     class Meta:

@@ -1,42 +1,65 @@
 import { action, makeObservable, observable, runInAction } from "mobx";
-// plane imports
-import { SitesCycleService } from "@plane/services";
-import type { TPublicCycle } from "@/types/cycle";
-// store
+import { CycleService } from "@/services/cycle.service";
+import type { ICycle } from "@plane/types";
 import type { CoreRootStore } from "./root.store";
 
 export interface ICycleStore {
-  // observables
-  cycles: TPublicCycle[] | undefined;
-  // computed actions
-  getCycleById: (cycleId: string | undefined) => TPublicCycle | undefined;
-  // fetch actions
-  fetchCycles: (anchor: string) => Promise<TPublicCycle[]>;
+  cycles: ICycle[] | undefined;
+  getCycleById: (cycleId: string | undefined) => ICycle | undefined;
+  fetchCycles: (workspaceSlug: string, projectId: string) => Promise<ICycle[]>;
+  patchCycle: (
+    workspaceSlug: string, 
+    projectId: string, 
+    cycleId: string, 
+    data: Partial<ICycle>
+  ) => Promise<any>;
 }
 
 export class CycleStore implements ICycleStore {
-  cycles: TPublicCycle[] | undefined = undefined;
-  cycleService: SitesCycleService;
+  cycles: ICycle[] | undefined = undefined;
+  cycleService: CycleService;
   rootStore: CoreRootStore;
 
   constructor(_rootStore: CoreRootStore) {
     makeObservable(this, {
-      // observables
       cycles: observable,
-      // fetch action
       fetchCycles: action,
+      patchCycle: action,
     });
-    this.cycleService = new SitesCycleService();
+    this.cycleService = new CycleService();
     this.rootStore = _rootStore;
   }
 
-  getCycleById = (cycleId: string | undefined) => this.cycles?.find((cycle) => cycle.id === cycleId);
+  getCycleById = (cycleId: string | undefined) => 
+    this.cycles?.find((cycle) => cycle.id === cycleId);
 
-  fetchCycles = async (anchor: string) => {
-    const cyclesResponse = await this.cycleService.list(anchor);
+  fetchCycles = async (workspaceSlug: string, projectId: string) => {
+    const cyclesResponse = await this.cycleService.getCyclesWithParams(workspaceSlug, projectId);
     runInAction(() => {
       this.cycles = cyclesResponse;
     });
     return cyclesResponse;
+  };
+
+  patchCycle = async (
+    workspaceSlug: string, 
+    projectId: string, 
+    cycleId: string, 
+    data: Partial<ICycle>
+  ) => {
+    try {
+      const response = await this.cycleService.patchCycle(workspaceSlug, projectId, cycleId, data);
+      runInAction(() => {
+        if (this.cycles) {
+          const index = this.cycles.findIndex((c) => c.id === cycleId);
+          if (index !== -1) {
+            this.cycles[index] = { ...this.cycles[index], ...response };
+          }
+        }
+      });
+      return response;
+    } catch (error) {
+      throw error;
+    }
   };
 }

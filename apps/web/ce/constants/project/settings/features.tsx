@@ -73,7 +73,7 @@ export const PROJECT_BASE_FEATURES_LIST: TBaseFeatureList = {
     property: "retro_view",
     title: "Retro",
     description: "Reflect on your team's work and processes to continuously improve.",
-    icon: <RetroIcon className="h-5 w-5 flex-shrink-0 -rotate-90 text-tertiary" />,
+    icon: <RetroIcon className="h-5 w-5 flex-shrink-0 text-tertiary" />,
     isPro: false,
     isEnabled: true,
   },

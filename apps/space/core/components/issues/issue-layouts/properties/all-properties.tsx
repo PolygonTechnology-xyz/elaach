@@ -42,7 +42,6 @@ export const IssueProperties = observer(function IssueProperties(props: IIssuePr
   const maxDate = getDate(issue.target_date);
   maxDate?.setDate(maxDate.getDate());
 
-  // হ্যান্ডলার ফাংশন যা ড্রপডাউন থেকে ভ্যালু নিয়ে ইস্যু আপডেট করবে
   const handleEstimate = (key: "estimate_point" | "estimate_time", value: string | undefined) => {
     if (handleIssueUpdate) {
       handleIssueUpdate({ [key]: value });

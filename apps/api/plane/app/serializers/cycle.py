@@ -49,10 +49,32 @@ class CycleSerializer(BaseSerializer):
     started_issues = serializers.IntegerField(read_only=True)
     unstarted_issues = serializers.IntegerField(read_only=True)
     backlog_issues = serializers.IntegerField(read_only=True)
+    uat_status = serializers.ChoiceField(
+        choices=[
+            ("#B80000", "Red"),
+            ("#FFBF00", "Amber"),
+            ("#008B02", "Green"),
+        ],
+        required=False,
+        error_messages={
+            "invalid_choice": "Selected color is not a valid RAG status."
+        }
+    )
+    uat_status_display = serializers.SerializerMethodField()
 
     # active | draft | upcoming | completed
     status = serializers.CharField(read_only=True)
-
+    
+    def get_uat_status_display(self, obj):
+        return obj.get_uat_status_display()
+    
+    #validation check for uat status
+    def validate_uat_status(self, value):
+        valid_choices = ["#B80000", "#FFBF00", "#008B02"]
+        if value not in valid_choices:
+            raise serializers.ValidationError("Only Red , Amber and Green colors are allowed for UAT status.")
+        return value
+    
     class Meta:
         model = Cycle
         fields = [
@@ -72,6 +94,8 @@ class CycleSerializer(BaseSerializer):
             "external_id",
             "progress_snapshot",
             "logo_props",
+            "uat_status",
+            "uat_status_display",
             # meta fields
             "is_favorite",
             "total_issues",

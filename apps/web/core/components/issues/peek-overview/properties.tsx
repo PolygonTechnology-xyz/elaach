@@ -11,26 +11,26 @@ import {
   Users,
   UserCircle2,
   Timer,
-  Layout, 
+  Layout,
 } from "lucide-react";
+// plane imports
 import { API_BASE_URL } from "@plane/constants";
-
 import { useTranslation } from "@plane/i18n";
 import { DiceIcon, DoubleCircleIcon, ContrastIcon } from "@plane/propel/icons";
 import { cn, getDate, renderFormattedPayloadDate, shouldHighlightIssueDueDate } from "@plane/utils";
-
+// components
 import { DateDropdown } from "@/components/dropdowns/date";
 import { PointEstimateDropdown, TimeEstimateDropdown } from "@/components/dropdowns/estimate";
 import { ButtonAvatars } from "@/components/dropdowns/member/avatar";
 import { MemberDropdown } from "@/components/dropdowns/member/dropdown";
 import { PriorityDropdown } from "@/components/dropdowns/priority";
 import { StateDropdown } from "@/components/dropdowns/state/dropdown";
-
+// hooks
 import { useIssueDetail } from "@/hooks/store/use-issue-detail";
 import { useMember } from "@/hooks/store/use-member";
 import { useProject } from "@/hooks/store/use-project";
 import { useProjectState } from "@/hooks/store/use-project-state";
-
+// plane-web components
 import { WorkItemAdditionalSidebarProperties } from "@/plane-web/components/issues/issue-details/additional-properties";
 import { IssueParentSelectRoot } from "@/plane-web/components/issues/issue-details/parent-select-root";
 import { IssueWorklogProperty } from "@/plane-web/components/issues/worklog/property";
@@ -60,6 +60,8 @@ const ISSUE_PROPERTIES_LIST = [
   { key: "tracked_time", label: "Tracked Time", icon: Timer },
 ];
 
+const DEFAULT_VISIBLE_PROPERTIES = ["state", "assignees", "priority", "due_date", "estimate_time", "story_point"];
+
 interface IPeekOverviewProperties {
   workspaceSlug: string;
   projectId: string;
@@ -71,53 +73,52 @@ interface IPeekOverviewProperties {
 export const PeekOverviewProperties: FC<IPeekOverviewProperties> = observer((props) => {
   const { workspaceSlug, projectId, issueId, issueOperations, disabled } = props;
   const { t } = useTranslation();
-  
+
   const [totalSeconds, setTotalSeconds] = useState(0);
   const [isPropertyModalOpen, setIsPropertyModalOpen] = useState(false);
-  const [visibleProperties, setVisibleProperties] = useState<string[]>([
-    "state", "assignees", "priority", "due_date", "estimate_time", "story_point"
-  ]);
+  
+  // Per-issue persistence using issueId in the key
+  const [visibleProperties, setVisibleProperties] = useState<string[]>(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem(`issue_peek_properties_${issueId}`);
+      return saved ? JSON.parse(saved) : DEFAULT_VISIBLE_PROPERTIES;
+    }
+    return DEFAULT_VISIBLE_PROPERTIES;
+  });
 
-  // Ref for handling outside click
   const menuRef = useRef<HTMLDivElement>(null);
 
-  // Outside click effect logic
+  // Sync state to localStorage whenever selection or issueId changes
+  useEffect(() => {
+    localStorage.setItem(`issue_peek_properties_${issueId}`, JSON.stringify(visibleProperties));
+  }, [visibleProperties, issueId]);
+
+  // Close menu on outside click
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setIsPropertyModalOpen(false);
       }
     };
-    if (isPropertyModalOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    if (isPropertyModalOpen) document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isPropertyModalOpen]);
 
+  // Fetch tracked time statistics
   useEffect(() => {
     if (!workspaceSlug || !projectId || !issueId) return;
-
     const fetchTrackedTime = async () => {
       try {
         const url = `${API_BASE_URL}/api/workspaces/${workspaceSlug}/projects/${projectId}/issues/${issueId}/tracked-times/total/`;
-        const response = await fetch(url, {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-        });
-
+        const response = await fetch(url, { credentials: "include" });
         if (response.ok) {
           const data = await response.json();
-          const total = data.total_seconds || data.total_tracked_time_seconds || 0;
-          setTotalSeconds(total);
+          setTotalSeconds(data.total_seconds || 0);
         }
       } catch (error) {
         console.error("Error fetching time:", error);
       }
     };
-
     fetchTrackedTime();
   }, [workspaceSlug, projectId, issueId]);
 
@@ -127,7 +128,7 @@ export const PeekOverviewProperties: FC<IPeekOverviewProperties> = observer((pro
   const { getUserDetails } = useMember();
 
   const issue = getIssueById(issueId);
-  if (!issue) return <></>;
+  if (!issue) return null;
 
   const createdByDetails = getUserDetails(issue?.created_by);
   const projectDetails = getProjectById(issue.project_id);
@@ -136,7 +137,7 @@ export const PeekOverviewProperties: FC<IPeekOverviewProperties> = observer((pro
   const maxDate = getDate(issue.target_date);
 
   const toggleProperty = (key: string) => {
-    setVisibleProperties((prev) =>
+    setVisibleProperties((prev) => 
       prev.includes(key) ? prev.filter((item) => item !== key) : [...prev, key]
     );
   };
@@ -145,10 +146,9 @@ export const PeekOverviewProperties: FC<IPeekOverviewProperties> = observer((pro
     <div>
       <div className="flex items-center justify-between mb-3">
         <h6 className="text-sm font-medium">{t("common.properties")}</h6>
-        
-        {/* Toggle Menu Wrapper with Ref */}
+
         <div className="relative" ref={menuRef}>
-          <button 
+          <button
             type="button"
             onClick={() => setIsPropertyModalOpen(!isPropertyModalOpen)}
             className="p-1.5 hover:bg-custom-background-80 rounded-md text-custom-text-300 transition-colors"
@@ -157,24 +157,19 @@ export const PeekOverviewProperties: FC<IPeekOverviewProperties> = observer((pro
           </button>
 
           {isPropertyModalOpen && (
-            <div className="absolute right-0 top-full mt-2 z-[100] w-52 p-2 
-              bg-white dark:bg-[#18181b] border border-custom-border-200 
-              shadow-xl rounded-lg text-left"
-            >
-              <p className="text-[10px] font-bold text-custom-text-400 mb-2 px-2 tracking-wider">
-                Select Properties
-              </p>
+            <div className="absolute right-0 top-full mt-2 z-[100] w-52 p-2 bg-white dark:bg-[#18181b] border border-custom-border-200 shadow-xl rounded-lg text-left">
+              <p className="text-[10px] font-bold text-custom-text-400 mb-2 px-2 tracking-wider uppercase">Select Properties</p>
               <div className="max-h-64 overflow-y-auto custom-scrollbar">
                 {ISSUE_PROPERTIES_LIST.map((prop) => (
-                  <label 
-                    key={prop.key} 
+                  <label
+                    key={prop.key}
                     className="flex items-center gap-2 px-2 py-1.5 hover:bg-custom-background-90 cursor-pointer rounded transition-colors"
                   >
-                    <input 
-                      type="checkbox" 
+                    <input
+                      type="checkbox"
                       checked={visibleProperties.includes(prop.key)}
                       onChange={() => toggleProperty(prop.key)}
-                      className="h-3.5 w-3.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                      className="h-3.5 w-3.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                     />
                     <PropertyIcon icon={prop.icon} isCustom={prop.isCustom} />
                     <span className="text-xs text-custom-text-200">{prop.label}</span>
@@ -186,8 +181,7 @@ export const PeekOverviewProperties: FC<IPeekOverviewProperties> = observer((pro
         </div>
       </div>
 
-      <div className={`w-full space-y-2 mt-3 ${disabled ? "opacity-60" : ""}`}>
-        
+      <div className={cn("w-full space-y-2 mt-3", disabled && "opacity-60")}>
         {/* State */}
         {visibleProperties.includes("state") && (
           <div className="flex w-full items-center gap-3 h-8">
@@ -227,7 +221,7 @@ export const PeekOverviewProperties: FC<IPeekOverviewProperties> = observer((pro
               buttonVariant={issue?.assignee_ids?.length > 1 ? "transparent-without-text" : "transparent-with-text"}
               className="w-3/4 flex-grow group"
               buttonContainerClassName="w-full text-left"
-              buttonClassName={`text-sm justify-between ${issue?.assignee_ids?.length > 0 ? "" : "text-custom-text-400"}`}
+              buttonClassName={cn("text-sm justify-between", !issue?.assignee_ids?.length && "text-custom-text-400")}
               hideIcon={issue.assignee_ids?.length === 0}
               dropdownArrow
               dropdownArrowClassName="h-3.5 w-3.5 hidden group-hover:inline"
@@ -254,25 +248,6 @@ export const PeekOverviewProperties: FC<IPeekOverviewProperties> = observer((pro
           </div>
         )}
 
-        {/* Created By */}
-        {createdByDetails && (
-          <div className="flex w-full items-center gap-3 h-8">
-            <div className="flex items-center gap-1 w-1/4 flex-shrink-0 text-sm text-custom-text-300">
-              <PropertyIcon icon={UserCircle2} />
-              <span>{t("common.created_by")}</span>
-            </div>
-            <div className="w-full h-full flex items-center gap-1.5 rounded px-2 py-0.5 text-sm justify-between cursor-not-allowed">
-              <ButtonAvatars
-                showTooltip
-                userIds={createdByDetails?.display_name.includes("-intake") ? null : createdByDetails?.id}
-              />
-              <span className="flex-grow truncate leading-5">
-                {createdByDetails?.display_name.includes("-intake") ? "Plane" : createdByDetails?.display_name}
-              </span>
-            </div>
-          </div>
-        )}
-
         {/* Start Date */}
         {visibleProperties.includes("start_date") && (
           <div className="flex w-full items-center gap-3 h-8">
@@ -293,7 +268,7 @@ export const PeekOverviewProperties: FC<IPeekOverviewProperties> = observer((pro
               disabled={disabled}
               className="w-3/4 flex-grow group"
               buttonContainerClassName="w-full text-left"
-              buttonClassName={`text-sm ${issue?.start_date ? "" : "text-custom-text-400"}`}
+              buttonClassName={cn("text-sm", !issue?.start_date && "text-custom-text-400")}
               hideIcon
               clearIconClassName="h-3 w-3 hidden group-hover:inline"
             />
@@ -345,7 +320,7 @@ export const PeekOverviewProperties: FC<IPeekOverviewProperties> = observer((pro
               buttonVariant="transparent-with-text"
               className="w-3/4 flex-grow group"
               buttonContainerClassName="w-full text-left"
-              buttonClassName={`text-sm ${issue?.estimate_time ? "" : "text-custom-text-400"}`}
+              buttonClassName={cn("text-sm", !issue?.estimate_time && "text-custom-text-400")}
               placeholder="None"
               hideIcon
               dropdownArrow
@@ -369,7 +344,7 @@ export const PeekOverviewProperties: FC<IPeekOverviewProperties> = observer((pro
               buttonVariant="transparent-with-text"
               className="w-3/4 flex-grow group"
               buttonContainerClassName="w-full text-left"
-              buttonClassName={`text-sm ${issue?.estimate_point ? "" : "text-custom-text-400"}`}
+              buttonClassName={cn("text-sm", !issue?.estimate_point && "text-custom-text-400")}
               placeholder="None"
               hideIcon
               dropdownArrow
@@ -380,7 +355,7 @@ export const PeekOverviewProperties: FC<IPeekOverviewProperties> = observer((pro
 
         {/* Modules */}
         {projectDetails?.module_view && visibleProperties.includes("modules") && (
-          <div className="flex w-full items-center gap-3 min-h-8 h-full">
+          <div className="flex w-full items-center gap-3 min-h-8">
             <div className="flex items-center gap-1 w-1/4 flex-shrink-0 text-sm text-custom-text-300">
               <PropertyIcon icon={DiceIcon} isCustom />
               <span>{t("common.modules")}</span>

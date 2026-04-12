@@ -19,6 +19,6 @@ class ProjectCyclesEndpoint(BaseAPIView):
         cycles = Cycle.objects.filter(
             workspace__slug=deploy_board.workspace.slug,
             project_id=deploy_board.project_id,
-        ).values("id", "name")
-
+        ).values("id", "name","uat_status")
+        
         return Response(cycles, status=status.HTTP_200_OK)

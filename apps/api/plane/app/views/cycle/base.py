@@ -72,15 +72,9 @@ class CycleViewSet(BaseViewSet):
         )
 
         project = Project.objects.get(id=self.kwargs.get("project_id"))
-
-        # Fetch project for the specific record or pass project_id dynamically
         project_timezone = project.timezone
-
-        # Convert the current time (timezone.now()) to the project's timezone
         local_tz = pytz.timezone(project_timezone)
         current_time_in_project_tz = timezone.now().astimezone(local_tz)
-
-        # Convert project local time back to UTC for comparison (start_date is stored in UTC)
         current_time_in_utc = current_time_in_project_tz.astimezone(pytz.utc)
 
         return self.filter_queryset(
@@ -180,32 +174,20 @@ class CycleViewSet(BaseViewSet):
     def list(self, request, slug, project_id):
         queryset = self.get_queryset().filter(archived_at__isnull=True)
         cycle_view = request.GET.get("cycle_view", "all")
-
-        # Update the order by
         queryset = queryset.order_by("-is_favorite", "-created_at")
-
         project = Project.objects.get(id=self.kwargs.get("project_id"))
-
-        # Fetch project for the specific record or pass project_id dynamically
         project_timezone = project.timezone
-
-        # Convert the current time (timezone.now()) to the project's timezone
         local_tz = pytz.timezone(project_timezone)
         current_time_in_project_tz = timezone.now().astimezone(local_tz)
-
-        # Convert project local time back to UTC for comparison (start_date is stored in UTC)
         current_time_in_utc = current_time_in_project_tz.astimezone(pytz.utc)
 
-        # Current Cycle
         if cycle_view == "current":
             queryset = queryset.filter(start_date__lte=current_time_in_utc, end_date__gte=current_time_in_utc)
 
             data = queryset.values(
-                # necessary fields
                 "id",
                 "workspace_id",
                 "project_id",
-                # model fields
                 "name",
                 "description",
                 "start_date",
@@ -218,6 +200,7 @@ class CycleViewSet(BaseViewSet):
                 "progress_snapshot",
                 "logo_props",
                 "is_favorite",
+                "uat_status",
                 "total_issues",
                 "completed_issues",
                 "cancelled_issues",
@@ -243,12 +226,14 @@ class CycleViewSet(BaseViewSet):
             "start_date",
             "end_date",
             "owned_by_id",
+            "uat_status",
             "view_props",
             "sort_order",
             "external_source",
             "external_id",
             "progress_snapshot",
             "logo_props",
+            
             # meta fields
             "is_favorite",
             "total_issues",
@@ -292,6 +277,7 @@ class CycleViewSet(BaseViewSet):
                         "progress_snapshot",
                         "logo_props",
                         "version",
+                        "uat_status",
                         # meta fields
                         "is_favorite",
                         "total_issues",
@@ -369,6 +355,7 @@ class CycleViewSet(BaseViewSet):
                 "view_props",
                 "sort_order",
                 "external_source",
+                "uat_status",
                 "external_id",
                 "progress_snapshot",
                 "logo_props",
@@ -435,6 +422,7 @@ class CycleViewSet(BaseViewSet):
                 "view_props",
                 "sort_order",
                 "external_source",
+                "uat_status",
                 "external_id",
                 "progress_snapshot",
                 "sub_issues",
@@ -774,6 +762,7 @@ class CycleProgressEndpoint(BaseAPIView):
                 "cancelled_issues": cancelled_issues,
                 "started_issues": started_issues,
                 "unstarted_issues": unstarted_issues,
+                # "uat_status": uat_status,
             },
             status=status.HTTP_200_OK,
         )

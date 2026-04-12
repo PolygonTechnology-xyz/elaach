@@ -9,6 +9,7 @@ import { PageIcon } from "../icons/project/page-icon";
 import { ViewsIcon } from "../icons/project/view-icon";
 import { WorkItemsIcon } from "../icons/project/work-items-icon";
 import { RetroIcon } from "../icons/project/retro-icon";
+
 // tab navigation import
 import { TabNavigationItem } from "./tab-navigation-item";
 import { TabNavigationList } from "./tab-navigation-list";
@@ -35,7 +36,6 @@ export const Default: Story = {
   render() {
     const [activeNavTab, setActiveNavTab] = useState("work_items");
 
-    // Example navigation items (matching actual Plane project navigation)
     const navItems = [
       { key: "overview", name: "Overview", href: "#overview", icon: OverviewIcon },
       { key: "work_items", name: "Work items", href: "#work_items", icon: WorkItemsIcon },
@@ -49,7 +49,6 @@ export const Default: Story = {
 
     return (
       <div className="space-y-8">
-        {/* Example 1: Navigation with anchor tags (simulating React Router Link) */}
         <div className="space-y-3">
           <div className="text-11 font-medium text-tertiary uppercase tracking-wide">
             With Navigation Links (e.g., React Router)
@@ -78,7 +77,6 @@ export const Default: Story = {
           </div>
         </div>
 
-        {/* Code example */}
         <div className="mt-6 p-4 bg-layer-1 rounded-md">
           <div className="text-11 font-medium text-secondary mb-2">Example Code:</div>
           <pre className="text-11 text-tertiary overflow-x-auto">

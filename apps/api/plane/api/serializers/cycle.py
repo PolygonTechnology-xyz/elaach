@@ -1,8 +1,8 @@
-# Third party imports
 import pytz
 from rest_framework import serializers
 
-# Module imports
+from plane.license.api.serializers import instance
+
 from .base import BaseSerializer
 from plane.db.models import Cycle, CycleIssue, User, Project
 from plane.utils.timezone_converter import convert_to_utc
@@ -31,6 +31,12 @@ class CycleCreateSerializer(BaseSerializer):
             self.fields["start_date"].timezone = project_timezone
             self.fields["end_date"].timezone = project_timezone
 
+    uat_status = serializers.ChoiceField(
+        choices=Cycle.UAT_SCORE_CHOICES,
+        required=False,
+        default="#FFBF00"
+    )
+
     class Meta:
         model = Cycle
         fields = [
@@ -42,6 +48,7 @@ class CycleCreateSerializer(BaseSerializer):
             "external_source",
             "external_id",
             "timezone",
+            "uat_status",
         ]
         read_only_fields = [
             "id",
@@ -56,7 +63,8 @@ class CycleCreateSerializer(BaseSerializer):
 
     def validate(self, data):
         project_id = self.initial_data.get("project_id") or (
-            self.instance.project_id if self.instance and hasattr(self.instance, "project_id") else None
+            self.instance.project_id if self.instance and hasattr(
+                self.instance, "project_id") else None
         )
 
         if not project_id:
@@ -66,13 +74,15 @@ class CycleCreateSerializer(BaseSerializer):
         if not project:
             raise serializers.ValidationError("Project not found")
         if not project.cycle_view:
-            raise serializers.ValidationError("Cycles are not enabled for this project")
+            raise serializers.ValidationError(
+                "Cycles are not enabled for this project")
         if (
             data.get("start_date", None) is not None
             and data.get("end_date", None) is not None
             and data.get("start_date", None) > data.get("end_date", None)
         ):
-            raise serializers.ValidationError("Start date cannot exceed end date")
+            raise serializers.ValidationError(
+                "Start date cannot exceed end date")
 
         if data.get("start_date", None) is not None and data.get("end_date", None) is not None:
             data["start_date"] = convert_to_utc(
@@ -87,7 +97,13 @@ class CycleCreateSerializer(BaseSerializer):
 
         if not data.get("owned_by"):
             data["owned_by"] = self.context["request"].user
+        return data
 
+    def validate_uat_status(self, data):
+        valid_choices = [choice[0] for choice in Cycle.UAT_SCORE_CHOICES]
+        if data not in valid_choices:
+            raise serializers.ValidationError(
+                "Invalid hex code. Please select a valid UAT status color.")
         return data
 
 
@@ -123,10 +139,68 @@ class CycleSerializer(BaseSerializer):
     total_estimates = serializers.FloatField(read_only=True)
     completed_estimates = serializers.FloatField(read_only=True)
     started_estimates = serializers.FloatField(read_only=True)
+    uat_status = serializers.ChoiceField(
+        choices=[
+            ("#000000", "Black"),
+            ("#D32F2F", "Red"),
+            ("#388E3C", "Green"),
+            ("#FBC02D", "Amber"),
+        ],
+        required=False,
+        error_messages={
+            "invalid_choice": "Selected color is not a valid RAG status."
+        }
+    )
+    uat_status_display = serializers.CharField(
+        source='get_uat_status_display', read_only=True)
+
+    def get_uat_status_display(self, obj):
+        return obj.get_uat_status_display()
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['uat_status'] = getattr(instance, 'uat_status', '#FFBF00') 
+        data['uat_status_display'] = instance.get_uat_status_display()
+        return data
+
+    def validate_uat_status(self, value):
+        valid_choices = ["#000000", "#B80000", "#FFBF00", "#008B02"]
+        if value not in valid_choices:
+            raise serializers.ValidationError(
+                "Only Red , Amber and Green colors are allowed for UAT statu.")
+        return value
 
     class Meta:
         model = Cycle
-        fields = "__all__"
+        fields = [
+            "id",
+            "name",
+            "description",
+            "start_date",
+            "end_date",
+            "owned_by",
+            "external_source",
+            "external_id",
+            "timezone",
+            "uat_status",
+            "uat_status_display",
+            "total_issues",
+            "cancelled_issues",
+            "completed_issues",
+            "started_issues",
+            "unstarted_issues",
+            "backlog_issues",
+            "total_estimates",
+            "completed_estimates",
+            "started_estimates",
+            "created_at",
+            "updated_at",
+            "created_by",
+            "updated_by",
+            "workspace",
+            "project",
+            "deleted_at",   
+        ]
         read_only_fields = [
             "id",
             "created_at",
@@ -168,6 +242,12 @@ class CycleLiteSerializer(BaseSerializer):
         model = Cycle
         fields = "__all__"
 
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['uat_status'] = getattr(instance, 'uat_status', '#FFBF00')
+        data['uat_status_display'] = instance.get_uat_status_display()
+        return data
+
 
 class CycleIssueRequestSerializer(serializers.Serializer):
     """
@@ -177,7 +257,8 @@ class CycleIssueRequestSerializer(serializers.Serializer):
     cycle assignment and sprint planning workflows.
     """
 
-    issues = serializers.ListField(child=serializers.UUIDField(), help_text="List of issue IDs to add to the cycle")
+    issues = serializers.ListField(child=serializers.UUIDField(
+    ), help_text="List of issue IDs to add to the cycle")
 
 
 class TransferCycleIssueRequestSerializer(serializers.Serializer):
@@ -188,4 +269,5 @@ class TransferCycleIssueRequestSerializer(serializers.Serializer):
     and relationship updates for sprint reallocation workflows.
     """
 
-    new_cycle_id = serializers.UUIDField(help_text="ID of the target cycle to transfer issues to")
+    new_cycle_id = serializers.UUIDField(
+        help_text="ID of the target cycle to transfer issues to")

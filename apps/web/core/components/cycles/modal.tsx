@@ -16,7 +16,6 @@ import useLocalStorage from "@/hooks/use-local-storage";
 import { usePlatformOS } from "@/hooks/use-platform-os";
 // services
 import { CycleService } from "@/services/cycle.service";
-// local imports
 import { CycleForm } from "./form";
 
 type CycleModalProps = {

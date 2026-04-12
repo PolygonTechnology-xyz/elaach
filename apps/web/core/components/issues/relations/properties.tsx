@@ -30,7 +30,6 @@ export const RelationIssueProperty = observer(function RelationIssueProperty(pro
   // derived value
   const issue = getIssueById(issueId);
 
-  // if issue is not found, return empty
   if (!issue) return <></>;
 
   // handlers

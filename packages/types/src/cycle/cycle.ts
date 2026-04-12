@@ -94,6 +94,8 @@ export interface ICycle extends TProgressSnapshot {
   sort_order: number;
   start_date: string | null;
   sub_issues?: number;
+  uat_status?: string;
+  uat_status_display?: string;
   updated_at?: string;
   updated_by?: string;
   archived_at: string | null;
@@ -112,7 +114,7 @@ export interface CycleIssueResponse {
   issue_detail: TIssue;
   created_at: Date;
   updated_at: Date;
-  created_by: string;
+  created_by: string; 
   updated_by: string;
   project: string;
   workspace: string;

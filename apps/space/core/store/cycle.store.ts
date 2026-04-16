@@ -1,5 +1,5 @@
 import { action, makeObservable, observable, runInAction } from "mobx";
-import { CycleService } from "@/services/cycle.service";
+import { CycleService } from "@plane/services";
 import type { ICycle } from "@plane/types";
 import type { CoreRootStore } from "./root.store";
 
@@ -34,7 +34,7 @@ export class CycleStore implements ICycleStore {
     this.cycles?.find((cycle) => cycle.id === cycleId);
 
   fetchCycles = async (workspaceSlug: string, projectId: string) => {
-    const cyclesResponse = await this.cycleService.getCyclesWithParams(workspaceSlug, projectId);
+    const cyclesResponse = await this.cycleService.getWithParams(workspaceSlug, projectId);
     runInAction(() => {
       this.cycles = cyclesResponse;
     });
@@ -42,13 +42,13 @@ export class CycleStore implements ICycleStore {
   };
 
   patchCycle = async (
-    workspaceSlug: string, 
-    projectId: string, 
-    cycleId: string, 
+    workspaceSlug: string,
+    projectId: string,
+    cycleId: string,
     data: Partial<ICycle>
   ) => {
     try {
-      const response = await this.cycleService.patchCycle(workspaceSlug, projectId, cycleId, data);
+      const response = await this.cycleService.update(workspaceSlug, projectId, cycleId, data);
       runInAction(() => {
         if (this.cycles) {
           const index = this.cycles.findIndex((c) => c.id === cycleId);
